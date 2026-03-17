@@ -1,0 +1,75 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin — Farida Coffee</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">Farida<span>.</span>Coffee<br><small style="font-size:.7rem;opacity:.5;font-family:var(--ff-body)">Admin Panel</small></div>
+    <nav class="sidebar-nav">
+      <a href="/admin">📊 Dashboard</a>
+      <a href="/admin/products">☕ Products</a>
+      <a href="/admin/orders" class="active">📦 Orders</a>
+      <a href="/" target="_blank">🌐 View Store</a>
+      <a href="/auth/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Orders</h1>
+    </div>
+
+    <!-- Filter Tabs -->
+    <div style="display:flex;gap:8px;margin-bottom:24px;flex-wrap:wrap">
+      <% ['all','pending','confirmed','processing','shipped','delivered','cancelled'].forEach(s => { %>
+        <a href="/admin/orders<%= s !== 'all' ? '?status=' + s : '' %>"
+           class="btn btn-sm"
+           style="border:1.5px solid <%= filter === s ? 'var(--espresso)' : 'var(--light-gray)' %>;
+                  background:<%= filter === s ? 'var(--espresso)' : 'white' %>;
+                  color:<%= filter === s ? 'var(--cream)' : 'var(--espresso)' %>">
+          <%= s.charAt(0).toUpperCase() + s.slice(1) %>
+        </a>
+      <% }) %>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Customer</th>
+          <th>City</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (orders.length === 0) { %>
+          <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--warm-gray)">No orders found</td></tr>
+        <% } %>
+        <% orders.forEach(order => { %>
+          <tr>
+            <td><strong><%= order.orderNumber %></strong></td>
+            <td>
+              <div style="font-weight:700;font-size:.9rem"><%= order.customer.name %></div>
+              <div style="font-size:.78rem;color:var(--warm-gray)"><%= order.customer.email %></div>
+            </td>
+            <td><%= order.shippingAddress.city %></td>
+            <td><strong>EGP <%= order.total.toFixed(0) %></strong></td>
+            <td style="font-size:.82rem"><%= order.paymentMethod.replace('-',' ') %></td>
+            <td>
+              <form action="/admin/orders/<%= order._id %>/status?_method=PUT" method="POST">
+                <select name="status" class="form-control" style="width:auto;padding:4px 10px;font-size:.82rem" onchange="this.form.submit()">
+                  <% ['pending','confirmed','processing','shipped','delivered','cancelled'].forEach(s => { %>
+                    <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s %></option>
+                  <% }) %>
+                </select>
+              </form>
+            </td>
+            <td style="font-size:.82rem;color:var(--warm-gray)"><%= new Date(order.createdAt).toLocaleDateString() %></td>
+            <td><a href="/admin/orders/<%= order._id %>" style="font-size:.82rem;font-weight:700;color:var(--caramel)">Details →</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body></html>

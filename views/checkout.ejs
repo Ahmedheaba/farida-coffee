@@ -1,0 +1,178 @@
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">Checkout</h1>
+    <div class="section-line"></div>
+
+    <div class="checkout-layout">
+      <!-- Left: Customer Details Form -->
+      <div>
+        <!-- Contact Info -->
+        <div class="checkout-card" style="margin-bottom:24px">
+          <h3 style="font-family:var(--ff-display);font-size:1.2rem;margin-bottom:24px;padding-bottom:12px;border-bottom:1px solid var(--cream-dark)">
+            📋 Contact Information
+          </h3>
+          <form id="checkout-form" action="/checkout" method="POST">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Full Name *</label>
+                <input type="text" name="name" class="form-control" required placeholder="Your full name">
+              </div>
+              <div class="form-group">
+                <label class="form-label">Email *</label>
+                <input type="email" name="email" class="form-control" required placeholder="email@example.com">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Phone Number</label>
+              <input type="tel" name="phone" class="form-control" placeholder="+20 1xx xxx xxxx">
+            </div>
+
+            <h3 style="font-family:var(--ff-display);font-size:1.2rem;margin:24px 0;padding-bottom:12px;border-bottom:1px solid var(--cream-dark)">
+              📦 Shipping Address
+            </h3>
+            <div class="form-group">
+              <label class="form-label">Street Address *</label>
+              <input type="text" name="street" class="form-control" required placeholder="123 El Tahrir St, Apt 4">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">City *</label>
+                <select name="city" class="form-control" required>
+                  <option value="">Select city...</option>
+                  <option>Cairo</option>
+                  <option>Giza</option>
+                  <option>Alexandria</option>
+                  <option>Mansoura</option>
+                  <option>Tanta</option>
+                  <option>Aswan</option>
+                  <option>Luxor</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">ZIP / Postal Code</label>
+                <input type="text" name="zip" class="form-control" placeholder="11511">
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Order Notes (optional)</label>
+              <textarea name="notes" class="form-control" rows="3" placeholder="Any special delivery instructions?"></textarea>
+            </div>
+
+            <h3 style="font-family:var(--ff-display);font-size:1.2rem;margin:24px 0;padding-bottom:12px;border-bottom:1px solid var(--cream-dark)">
+              💳 Payment Method
+            </h3>
+            <div style="display:flex;flex-direction:column;gap:12px;margin-bottom:24px">
+              <label style="display:flex;align-items:center;gap:12px;background:var(--cream);border:1.5px solid var(--caramel);border-radius:10px;padding:16px;cursor:pointer">
+                <input type="radio" name="paymentMethod" value="cash" checked style="accent-color:var(--caramel);width:18px;height:18px">
+                <div>
+                  <div style="font-weight:700;font-size:.95rem">Cash on Delivery</div>
+                  <div style="font-size:.82rem;color:var(--warm-gray)">Pay when your coffee arrives</div>
+                </div>
+                <span style="margin-left:auto;font-size:1.3rem">💵</span>
+              </label>
+              <label style="display:flex;align-items:center;gap:12px;background:white;border:1.5px solid var(--light-gray);border-radius:10px;padding:16px;cursor:pointer" id="stripe-option">
+                <input type="radio" name="paymentMethod" value="stripe" style="accent-color:var(--caramel);width:18px;height:18px" onchange="toggleStripe(this)">
+                <div>
+                  <div style="font-weight:700;font-size:.95rem">Credit / Debit Card</div>
+                  <div style="font-size:.82rem;color:var(--warm-gray)">Secure payment via Stripe</div>
+                </div>
+                <span style="margin-left:auto;font-size:1.3rem">💳</span>
+              </label>
+            </div>
+
+            <!-- Stripe Card Element (hidden unless card selected) -->
+            <div id="stripe-container" style="display:none;margin-bottom:24px">
+              <div id="card-element" style="background:white;border:1.5px solid var(--light-gray);border-radius:10px;padding:16px"></div>
+              <div id="card-errors" style="color:var(--danger);font-size:.85rem;margin-top:8px"></div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block" style="font-size:1rem;padding:16px" id="submit-btn">
+              Place Order — EGP <%= total %>
+            </button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Right: Order Summary -->
+      <div>
+        <div class="checkout-card" style="position:sticky;top:88px">
+          <h3 style="font-family:var(--ff-display);font-size:1.2rem;margin-bottom:20px">Your Order</h3>
+          <% cart.forEach(item => { %>
+            <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--cream-dark)">
+              <img src="<%= item.image %>" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:8px"
+                   onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=60&h=60&fit=crop'">
+              <div style="flex:1;min-width:0">
+                <div style="font-weight:700;font-size:.9rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis"><%= item.name %></div>
+                <div style="font-size:.82rem;color:var(--warm-gray)">Qty: <%= item.quantity %></div>
+              </div>
+              <div style="font-weight:700;font-size:.9rem;white-space:nowrap">EGP <%= (item.price * item.quantity).toFixed(0) %></div>
+            </div>
+          <% }) %>
+          <div style="padding-top:16px">
+            <div class="cart-summary-row"><span>Subtotal</span><span>EGP <%= subtotal.toFixed(0) %></span></div>
+            <div class="cart-summary-row"><span>Shipping</span><span>EGP <%= shipping %></span></div>
+            <div class="cart-summary-total"><span>Total</span><span>EGP <%= total %></span></div>
+          </div>
+          <div style="margin-top:20px;padding:14px;background:var(--cream);border-radius:8px;font-size:.82rem;color:var(--warm-gray)">
+            🔒 Your information is secure and encrypted
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script src="https://js.stripe.com/v3/"></script>
+<script>
+  const stripe = Stripe('<%= stripePublicKey %>');
+  const elements = stripe.elements();
+  const card = elements.create('card', {
+    style: { base: { fontFamily: 'Lato, sans-serif', fontSize: '16px', color: '#2C1A0E' } }
+  });
+  card.mount('#card-element');
+
+  card.on('change', e => {
+    document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
+  });
+
+  function toggleStripe(radio) {
+    document.getElementById('stripe-container').style.display = radio.checked ? 'block' : 'none';
+  }
+
+  document.getElementById('checkout-form').addEventListener('submit', async (e) => {
+    const paymentMethod = document.querySelector('input[name=paymentMethod]:checked').value;
+    if (paymentMethod !== 'stripe') return; // Let form submit normally for cash
+
+    e.preventDefault();
+    const btn = document.getElementById('submit-btn');
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+
+    // Get payment intent from server
+    const intentRes = await fetch('/checkout/stripe/intent', { method: 'POST' });
+    const { clientSecret } = await intentRes.json();
+
+    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
+      payment_method: { card }
+    });
+
+    if (error) {
+      document.getElementById('card-errors').textContent = error.message;
+      btn.disabled = false;
+      btn.textContent = 'Place Order';
+    } else {
+      // Confirm order on server
+      const formData = new FormData(e.target);
+      const body = Object.fromEntries(formData);
+      body.paymentIntentId = paymentIntent.id;
+      const res = await fetch('/checkout/stripe/confirm', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      const { orderId } = await res.json();
+      window.location.href = `/orders/${orderId}/confirmation`;
+    }
+  });
+</script>

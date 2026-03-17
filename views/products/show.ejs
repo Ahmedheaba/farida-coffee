@@ -1,0 +1,302 @@
+<section class="section">
+  <div class="container">
+    <!-- Breadcrumb -->
+    <p style="font-size:.85rem;color:var(--warm-gray);margin-bottom:32px">
+      <a href="/">Home</a> / <a href="/products">Shop</a> / <%= product.name %>
+    </p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:start">
+      <!-- Image -->
+      <div style="background:var(--cream-dark);border-radius:16px;overflow:hidden;aspect-ratio:1">
+        <img src="<%= product.image %>" alt="<%= product.name %>"
+             style="width:100%;height:100%;object-fit:cover"
+             onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=600&h=600&fit=crop'">
+      </div>
+
+      <!-- Info -->
+      <div>
+        <div class="product-tag" style="font-size:.8rem;margin-bottom:12px">
+          <%= product.category.replace('-',' ').replace(/\b\w/g,l=>l.toUpperCase()) %>
+          <% if (product.origin) { %> · <%= product.origin %><% } %>
+          <% if (product.roastLevel) { %> · <%= product.roastLevel.replace('-',' ') %> roast<% } %>
+        </div>
+        <h1 style="font-size:2.2rem;margin-bottom:16px"><%= product.name %></h1>
+        <div class="stars" style="font-size:1rem;margin-bottom:20px">
+          ★★★★<%= product.rating >= 4.5 ? '★' : '☆' %>
+          <span class="stars-count"><%= product.rating %> (<%= product.reviewCount %> reviews)</span>
+        </div>
+        <p style="font-size:1.05rem;color:var(--warm-gray);line-height:1.8;margin-bottom:28px">
+          <%= product.description %>
+        </p>
+
+        <!-- Tags -->
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:28px">
+          <% if (product.weight) { %>
+            <span style="background:var(--cream-dark);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700">⚖️ <%= product.weight %></span>
+          <% } %>
+          <% if (product.roastLevel) { %>
+            <span style="background:var(--cream-dark);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700">🔥 <%= product.roastLevel %> roast</span>
+          <% } %>
+          <% if (product.origin) { %>
+            <span style="background:var(--cream-dark);padding:6px 14px;border-radius:50px;font-size:.8rem;font-weight:700">🌍 <%= product.origin %></span>
+          <% } %>
+        </div>
+
+        <!-- Price + Add to Cart -->
+        <div style="background:white;border-radius:16px;padding:24px;box-shadow:var(--shadow-sm)">
+          <div style="font-family:var(--ff-display);font-size:2rem;font-weight:700;margin-bottom:20px">
+            EGP <%= product.price.toFixed(0) %>
+            <span style="font-size:1rem;color:var(--warm-gray);font-weight:400">/ <%= product.weight || '250g' %></span>
+          </div>
+          <form action="/cart/add" method="POST" style="display:flex;gap:12px;align-items:center">
+            <input type="hidden" name="productId" value="<%= product._id %>">
+            <div style="display:flex;align-items:center;border:1.5px solid var(--light-gray);border-radius:50px;overflow:hidden">
+              <button type="button" onclick="changeQty(-1)" style="width:40px;height:44px;border:none;background:none;font-size:1.1rem;cursor:pointer;color:var(--espresso)">−</button>
+              <input type="number" name="quantity" id="qty" value="1" min="1" max="<%= product.stock %>"
+                     style="width:48px;text-align:center;border:none;font-size:1rem;font-weight:700;outline:none">
+              <button type="button" onclick="changeQty(1)" style="width:40px;height:44px;border:none;background:none;font-size:1.1rem;cursor:pointer;color:var(--espresso)">+</button>
+            </div>
+            <button type="submit" class="btn btn-primary" style="flex:1">
+              Add to Cart
+            </button>
+          </form>
+          <% if (product.stock < 10 && product.stock > 0) { %>
+            <p style="color:#B87333;font-size:.82rem;margin-top:12px">⚠️ Only <%= product.stock %> left in stock</p>
+          <% } %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    <% if (related.length > 0) { %>
+      <div style="margin-top:80px">
+        <h2 class="section-title">You Might Also Like</h2>
+        <div class="section-line"></div>
+        <div class="products-grid">
+          <% related.forEach(p => { %>
+            <div class="product-card">
+              <a href="/products/<%= p._id %>">
+                <div class="product-card-img">
+                  <img src="<%= p.image %>" alt="<%= p.name %>"
+                       onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop'">
+                </div>
+              </a>
+              <div class="product-card-body">
+                <div class="product-tag"><%= p.category %></div>
+                <h3><a href="/products/<%= p._id %>"><%= p.name %></a></h3>
+              </div>
+              <div class="product-card-footer">
+                <div class="product-price">EGP <%= p.price.toFixed(0) %></div>
+                <a href="/products/<%= p._id %>" class="btn btn-dark btn-sm">View</a>
+              </div>
+            </div>
+          <% }) %>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>
+<!-- ─── Reviews Section ─────────────────────────────────── -->
+<section style="background:var(--cream);padding:60px 0">
+  <div class="container">
+    <h2 class="section-title">Customer Reviews</h2>
+    <div class="section-line"></div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start">
+
+      <!-- Left: Reviews List -->
+      <div>
+        <!-- Rating Summary -->
+        <div style="background:white;border-radius:16px;padding:28px;box-shadow:var(--shadow-sm);margin-bottom:24px;text-align:center">
+          <div style="font-family:var(--ff-display);font-size:4rem;font-weight:700;line-height:1"><%= product.rating %></div>
+          <div style="color:var(--gold);font-size:1.5rem;margin:8px 0">
+            <% for(let i=1; i<=5; i++) { %>
+              <%= i <= Math.round(product.rating) ? '★' : '☆' %>
+            <% } %>
+          </div>
+          <div style="color:var(--warm-gray);font-size:.9rem">
+            Based on <%= product.reviewCount %> review<%= product.reviewCount !== 1 ? 's' : '' %>
+          </div>
+        </div>
+
+        <!-- Reviews List -->
+        <% if (reviews.length === 0) { %>
+          <div style="text-align:center;padding:40px;color:var(--warm-gray);background:white;border-radius:16px">
+            <div style="font-size:2.5rem;margin-bottom:12px">☕</div>
+            <p>No reviews yet. Be the first to review!</p>
+          </div>
+        <% } %>
+
+        <% reviews.forEach(review => { %>
+          <div style="background:white;border-radius:16px;padding:24px;box-shadow:var(--shadow-sm);margin-bottom:16px">
+            <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
+              <div>
+                <div style="display:flex;align-items:center;gap:10px;margin-bottom:4px">
+                  <!-- Avatar -->
+                  <div style="width:36px;height:36px;border-radius:50%;background:var(--cream-dark);
+                              display:flex;align-items:center;justify-content:center;
+                              font-weight:700;font-size:.85rem;color:var(--roast)">
+                    <%= review.customerName.charAt(0).toUpperCase() %>
+                  </div>
+                  <div>
+                    <div style="font-weight:700;font-size:.95rem"><%= review.customerName %></div>
+                    <div style="display:flex;align-items:center;gap:6px">
+                      <span style="color:var(--gold);font-size:.9rem">
+                        <% for(let i=1; i<=5; i++) { %>
+                          <%= i <= review.rating ? '★' : '☆' %>
+                        <% } %>
+                      </span>
+                      <% if (review.verified) { %>
+                        <span style="background:#EBF5EF;color:var(--success);font-size:.7rem;
+                                     font-weight:700;padding:2px 8px;border-radius:50px">
+                          ✓ Verified Purchase
+                        </span>
+                      <% } %>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div style="display:flex;align-items:center;gap:12px">
+                <span style="font-size:.8rem;color:var(--warm-gray)">
+                  <%= new Date(review.createdAt).toLocaleDateString() %>
+                </span>
+                <% if (isAdmin) { %>
+                  <form action="/reviews/<%= review._id %>?_method=DELETE" method="POST"
+                        onsubmit="return confirm('Delete this review?')">
+                    <button type="submit"
+                            style="background:none;border:none;cursor:pointer;color:var(--danger);font-size:.8rem;font-weight:700">
+                      Delete
+                    </button>
+                  </form>
+                <% } %>
+              </div>
+            </div>
+            <div style="font-weight:700;margin-bottom:6px"><%= review.title %></div>
+            <p style="color:var(--warm-gray);font-size:.9rem;line-height:1.7;margin:0"><%= review.body %></p>
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Right: Write a Review Form -->
+      <div style="position:sticky;top:88px">
+        <% if (!currentUser) { %>
+          <!-- Not logged in -->
+          <div style="background:white;border-radius:16px;padding:32px;box-shadow:var(--shadow-sm);text-align:center">
+            <div style="font-size:2.5rem;margin-bottom:16px">⭐</div>
+            <h3 style="font-family:var(--ff-display);margin-bottom:12px">Share Your Experience</h3>
+            <p style="color:var(--warm-gray);margin-bottom:24px">Login to write a review</p>
+            <a href="/auth/login" class="btn btn-primary btn-block">Login to Review</a>
+          </div>
+
+        <% } else if (userReview) { %>
+          <!-- Already reviewed -->
+          <div style="background:white;border-radius:16px;padding:32px;box-shadow:var(--shadow-sm);text-align:center">
+            <div style="font-size:2.5rem;margin-bottom:16px">✅</div>
+            <h3 style="font-family:var(--ff-display);margin-bottom:12px">Thanks for your review!</h3>
+            <div style="background:var(--cream);border-radius:10px;padding:16px;text-align:left">
+              <div style="color:var(--gold);margin-bottom:6px">
+                <% for(let i=1; i<=5; i++) { %>
+                  <%= i <= userReview.rating ? '★' : '☆' %>
+                <% } %>
+              </div>
+              <div style="font-weight:700;margin-bottom:4px"><%= userReview.title %></div>
+              <p style="color:var(--warm-gray);font-size:.9rem;margin:0"><%= userReview.body %></p>
+            </div>
+          </div>
+
+        <% } else { %>
+          <!-- Review Form -->
+          <div style="background:white;border-radius:16px;padding:32px;box-shadow:var(--shadow-sm)">
+            <h3 style="font-family:var(--ff-display);font-size:1.3rem;margin-bottom:24px">
+              Write a Review
+              <% if (hasPurchased) { %>
+                <span style="background:#EBF5EF;color:var(--success);font-size:.7rem;
+                             font-weight:700;padding:3px 10px;border-radius:50px;vertical-align:middle">
+                  ✓ Verified Purchase
+                </span>
+              <% } %>
+            </h3>
+
+            <form action="/reviews" method="POST">
+              <input type="hidden" name="productId" value="<%= product._id %>">
+
+              <!-- Star Rating Picker -->
+              <div class="form-group">
+                <label class="form-label">Your Rating *</label>
+                <div class="star-picker" style="display:flex;gap:8px;font-size:2rem;cursor:pointer">
+                  <% for(let i=1; i<=5; i++) { %>
+                    <span class="star" data-value="<%= i %>"
+                          style="color:var(--light-gray);transition:color .15s;user-select:none">★</span>
+                  <% } %>
+                </div>
+                <input type="hidden" name="rating" id="rating-input" required>
+                <div id="rating-label" style="font-size:.82rem;color:var(--warm-gray);margin-top:6px;min-height:18px"></div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Review Title *</label>
+                <input type="text" name="title" class="form-control" required
+                       placeholder="e.g. Best coffee I've ever had!">
+              </div>
+
+              <div class="form-group">
+                <label class="form-label">Your Review *</label>
+                <textarea name="body" class="form-control" rows="4" required
+                          placeholder="Tell others what you think about this coffee..."></textarea>
+              </div>
+
+              <button type="submit" class="btn btn-primary btn-block">
+                Submit Review ⭐
+              </button>
+            </form>
+          </div>
+        <% } %>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Star Picker Script -->
+<script>
+  const stars      = document.querySelectorAll('.star');
+  const ratingInput = document.getElementById('rating-input');
+  const ratingLabel = document.getElementById('rating-label');
+  const labels = ['', 'Poor', 'Fair', 'Good', 'Very Good', 'Excellent'];
+
+  stars.forEach(star => {
+    star.addEventListener('mouseover', () => {
+      const val = Number(star.dataset.value);
+      stars.forEach((s, i) => {
+        s.style.color = i < val ? 'var(--gold)' : 'var(--light-gray)';
+      });
+      ratingLabel.textContent = labels[val];
+    });
+
+    star.addEventListener('click', () => {
+      const val = Number(star.dataset.value);
+      ratingInput.value = val;
+      stars.forEach((s, i) => {
+        s.style.color = i < val ? 'var(--gold)' : 'var(--light-gray)';
+      });
+      ratingLabel.textContent = '✓ ' + labels[val];
+      ratingLabel.style.color = 'var(--success)';
+    });
+  });
+
+  document.querySelector('.star-picker').addEventListener('mouseleave', () => {
+    const val = Number(ratingInput.value);
+    stars.forEach((s, i) => {
+      s.style.color = i < val ? 'var(--gold)' : 'var(--light-gray)';
+    });
+    ratingLabel.textContent = val ? '✓ ' + labels[val] : '';
+  });
+</script>
+
+<script>
+function changeQty(delta) {
+  const input = document.getElementById('qty');
+  const newVal = Math.max(1, Math.min(<%= product.stock %>, parseInt(input.value) + delta));
+  input.value = newVal;
+}
+</script>

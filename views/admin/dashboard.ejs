@@ -1,0 +1,81 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin — Farida Coffee</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<div class="admin-layout">
+  <!-- Sidebar -->
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">Farida<span>.</span>Coffee<br><small style="font-size:.7rem;opacity:.5;font-family:var(--ff-body)">Admin Panel</small></div>
+    <nav class="sidebar-nav">
+      <a href="/admin" class="active">📊 Dashboard</a>
+      <a href="/admin/products">☕ Products</a>
+      <a href="/admin/orders">📦 Orders</a>
+      <a href="/" target="_blank">🌐 View Store</a>
+      <a href="/auth/logout" style="margin-top:auto;border-top:1px solid rgba(255,255,255,.1)">🚪 Logout</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="admin-main">
+    <div class="admin-header">
+      <h1>Dashboard</h1>
+      <p style="color:var(--warm-gray);font-size:.9rem">Welcome back, Admin</p>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">☕</div>
+        <div class="stat-label">Total Products</div>
+        <div class="stat-value"><%= stats.products %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">📦</div>
+        <div class="stat-label">Total Orders</div>
+        <div class="stat-value"><%= stats.orders %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-label">Customers</div>
+        <div class="stat-value"><%= stats.users %></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">💰</div>
+        <div class="stat-label">Revenue (Paid)</div>
+        <div class="stat-value" style="font-size:1.4rem">EGP <%= stats.revenue.toLocaleString() %></div>
+      </div>
+    </div>
+
+    <!-- Recent Orders -->
+    <h2 style="font-family:var(--ff-display);font-size:1.3rem;margin-bottom:16px">Recent Orders</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% if (recentOrders.length === 0) { %>
+          <tr><td colspan="8" style="text-align:center;padding:32px;color:var(--warm-gray)">No orders yet</td></tr>
+        <% } %>
+        <% recentOrders.forEach(order => { %>
+          <tr>
+            <td><strong><%= order.orderNumber %></strong></td>
+            <td><%= order.customer.name %></td>
+            <td><%= order.items.length %></td>
+            <td>EGP <%= order.total.toFixed(0) %></td>
+            <td><%= order.paymentMethod.replace('-',' ') %></td>
+            <td><span class="badge badge-<%= order.status %>"><%= order.status %></span></td>
+            <td style="color:var(--warm-gray);font-size:.82rem"><%= new Date(order.createdAt).toLocaleDateString() %></td>
+            <td><a href="/admin/orders/<%= order._id %>" style="font-size:.82rem;font-weight:700">View →</a></td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body></html>

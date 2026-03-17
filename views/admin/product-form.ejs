@@ -1,0 +1,116 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin — Farida Coffee</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">Farida<span>.</span>Coffee<br><small style="font-size:.7rem;opacity:.5;font-family:var(--ff-body)">Admin Panel</small></div>
+    <nav class="sidebar-nav">
+      <a href="/admin">📊 Dashboard</a>
+      <a href="/admin/products" class="active">☕ Products</a>
+      <a href="/admin/orders">📦 Orders</a>
+      <a href="/" target="_blank">🌐 View Store</a>
+      <a href="/auth/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <a href="/admin/products" style="font-size:.85rem;color:var(--warm-gray)">← Back to Products</a>
+      <h1 style="margin-top:8px"><%= product ? 'Edit' : 'Add New' %> Product</h1>
+    </div>
+
+    <div style="max-width:700px">
+      <div class="checkout-card">
+        <form action="<%= product ? '/admin/products/' + product._id + '?_method=PUT' : '/admin/products' %>"
+              method="POST" enctype="multipart/form-data">
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Product Name *</label>
+              <input type="text" name="name" class="form-control" required
+                     value="<%= product ? product.name : '' %>" placeholder="e.g. Ethiopian Yirgacheffe">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Price (EGP) *</label>
+              <input type="number" name="price" class="form-control" required min="0" step="0.01"
+                     value="<%= product ? product.price : '' %>" placeholder="150">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Description *</label>
+            <textarea name="description" class="form-control" rows="3" required
+                      placeholder="Describe the flavor, origin, and character of this coffee..."><%= product ? product.description : '' %></textarea>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Category *</label>
+              <select name="category" class="form-control" required>
+                <% ['espresso','filter','cold-brew','beans','equipment','accessories'].forEach(cat => { %>
+                  <option value="<%= cat %>" <%= product && product.category === cat ? 'selected' : '' %>>
+                    <%= cat.replace('-',' ').replace(/\b\w/g,l=>l.toUpperCase()) %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Roast Level</label>
+              <select name="roastLevel" class="form-control">
+                <option value="">— Select —</option>
+                <% ['light','medium','medium-dark','dark'].forEach(r => { %>
+                  <option value="<%= r %>" <%= product && product.roastLevel === r ? 'selected' : '' %>>
+                    <%= r.replace('-',' ').replace(/\b\w/g,l=>l.toUpperCase()) %>
+                  </option>
+                <% }) %>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Origin</label>
+              <input type="text" name="origin" class="form-control"
+                     value="<%= product ? product.origin || '' : '' %>" placeholder="e.g. Ethiopia">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Weight</label>
+              <input type="text" name="weight" class="form-control"
+                     value="<%= product ? product.weight || '' : '' %>" placeholder="e.g. 250g">
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Stock Quantity</label>
+              <input type="number" name="stock" class="form-control" min="0"
+                     value="<%= product ? product.stock : 100 %>">
+            </div>
+            <div class="form-group" style="display:flex;align-items:center;gap:10px;padding-top:28px">
+              <input type="checkbox" name="featured" id="featured" style="width:18px;height:18px;accent-color:var(--caramel)"
+                     <%= product && product.featured ? 'checked' : '' %>>
+              <label for="featured" class="form-label" style="margin:0;cursor:pointer">Feature on homepage</label>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Product Image</label>
+            <input type="file" name="image" class="form-control" accept="image/*">
+            <% if (product && product.image) { %>
+              <div style="margin-top:12px;display:flex;align-items:center;gap:12px">
+                <img src="<%= product.image %>" alt="" style="width:60px;height:60px;object-fit:cover;border-radius:8px"
+                     onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=60&h=60&fit=crop'">
+                <span style="font-size:.82rem;color:var(--warm-gray)">Current image (upload new to replace)</span>
+              </div>
+            <% } %>
+          </div>
+
+          <div style="display:flex;gap:12px;margin-top:8px">
+            <button type="submit" class="btn btn-primary">
+              <%= product ? 'Update Product' : 'Create Product' %>
+            </button>
+            <a href="/admin/products" class="btn" style="border:1.5px solid var(--light-gray)">Cancel</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+</div>
+</body></html>

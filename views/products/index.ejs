@@ -1,0 +1,77 @@
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">Our Coffee</h1>
+    <div class="section-line"></div>
+
+    <!-- Filters Bar -->
+    <form method="GET" action="/products" style="display:flex;flex-wrap:wrap;gap:12px;margin-bottom:40px;align-items:center">
+      <select name="category" class="form-control" style="width:auto;min-width:150px" onchange="this.form.submit()">
+        <option value="">All Categories</option>
+        <% ['espresso','filter','cold-brew','beans','equipment','accessories'].forEach(cat => { %>
+          <option value="<%= cat %>" <%= filters.category === cat ? 'selected' : '' %>><%= cat.replace('-',' ').replace(/\b\w/g,l=>l.toUpperCase()) %></option>
+        <% }) %>
+      </select>
+      <select name="sort" class="form-control" style="width:auto;min-width:160px" onchange="this.form.submit()">
+        <option value="">Sort: Newest</option>
+        <option value="price-asc"  <%= filters.sort==='price-asc'  ? 'selected':'' %>>Price: Low → High</option>
+        <option value="price-desc" <%= filters.sort==='price-desc' ? 'selected':'' %>>Price: High → Low</option>
+        <option value="rating"     <%= filters.sort==='rating'     ? 'selected':'' %>>Top Rated</option>
+      </select>
+      <div style="display:flex;gap:8px;align-items:center">
+        <input type="number" name="min" placeholder="Min EGP" value="<%= filters.min||'' %>"
+               class="form-control" style="width:110px">
+        <span style="color:var(--warm-gray)">—</span>
+        <input type="number" name="max" placeholder="Max EGP" value="<%= filters.max||'' %>"
+               class="form-control" style="width:110px">
+        <button type="submit" class="btn btn-dark btn-sm">Filter</button>
+      </div>
+      <% if (Object.keys(filters).some(k => filters[k])) { %>
+        <a href="/products" class="btn btn-sm" style="border:1.5px solid var(--light-gray)">✕ Clear</a>
+      <% } %>
+    </form>
+
+    <!-- Results Count -->
+    <p style="color:var(--warm-gray);font-size:.9rem;margin-bottom:24px">
+      <%= products.length %> product<%= products.length !== 1 ? 's' : '' %> found
+    </p>
+
+    <% if (products.length === 0) { %>
+      <div style="text-align:center;padding:60px 0;color:var(--warm-gray)">
+        <div style="font-size:3rem;margin-bottom:16px">☕</div>
+        <h3>No products found</h3>
+        <p>Try adjusting your filters</p>
+        <a href="/products" class="btn btn-primary" style="margin-top:20px">View All</a>
+      </div>
+    <% } else { %>
+      <div class="products-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <a href="/products/<%= product._id %>">
+              <div class="product-card-img">
+                <img src="<%= product.image %>" alt="<%= product.name %>"
+                     onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop'">
+              </div>
+            </a>
+            <div class="product-card-body">
+              <div class="product-tag"><%= product.category %><%= product.origin ? ' · ' + product.origin : '' %></div>
+              <h3><a href="/products/<%= product._id %>"><%= product.name %></a></h3>
+              <p><%= product.description.substring(0, 85) %>...</p>
+              <div class="stars">
+                ★★★★<%= product.rating >= 4.5 ? '★' : '☆' %>
+                <span class="stars-count">(<%= product.reviewCount %>)</span>
+              </div>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">EGP <%= product.price.toFixed(0) %></div>
+              <form action="/cart/add" method="POST">
+                <input type="hidden" name="productId" value="<%= product._id %>">
+                <input type="hidden" name="quantity" value="1">
+                <button type="submit" class="btn btn-dark btn-sm">Add to Cart</button>
+              </form>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</section>

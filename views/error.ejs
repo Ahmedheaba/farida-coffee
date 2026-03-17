@@ -1,0 +1,26 @@
+<section
+  style="
+    min-height: 70vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  "
+>
+  <div>
+    <div style="font-size: 4rem; margin-bottom: 16px">⚠️</div>
+    <h1
+      style="
+        font-family: var(--ff-display);
+        font-size: 2rem;
+        margin-bottom: 12px;
+      "
+    >
+      Something went wrong
+    </h1>
+    <p style="color: var(--warm-gray); margin-bottom: 28px">
+      <%= error.message || 'An unexpected error occurred' %>
+    </p>
+    <a href="/" class="btn btn-primary">Back to Homepage</a>
+  </div>
+</section>

@@ -1,0 +1,61 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin — Farida Coffee</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">Farida<span>.</span>Coffee<br><small style="font-size:.7rem;opacity:.5;font-family:var(--ff-body)">Admin Panel</small></div>
+    <nav class="sidebar-nav">
+      <a href="/admin">📊 Dashboard</a>
+      <a href="/admin/products" class="active">☕ Products</a>
+      <a href="/admin/orders">📦 Orders</a>
+      <a href="/" target="_blank">🌐 View Store</a>
+      <a href="/auth/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header" style="display:flex;justify-content:space-between;align-items:center">
+      <div>
+        <h1>Products</h1>
+        <p style="color:var(--warm-gray);font-size:.9rem"><%= products.length %> products total</p>
+      </div>
+      <a href="/admin/products/new" class="btn btn-primary">+ Add Product</a>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Image</th>
+          <th>Name</th>
+          <th>Category</th>
+          <th>Price</th>
+          <th>Stock</th>
+          <th>Featured</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% products.forEach(product => { %>
+          <tr>
+            <td>
+              <img src="<%= product.image %>" alt="" style="width:48px;height:48px;object-fit:cover;border-radius:8px"
+                   onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=60&h=60&fit=crop'">
+            </td>
+            <td><strong><%= product.name %></strong></td>
+            <td style="text-transform:capitalize"><%= product.category %></td>
+            <td>EGP <%= product.price.toFixed(0) %></td>
+            <td><%= product.stock %></td>
+            <td><%= product.featured ? '⭐ Yes' : '—' %></td>
+            <td>
+              <div style="display:flex;gap:8px">
+                <a href="/admin/products/<%= product._id %>/edit" class="btn btn-sm" style="border:1.5px solid var(--caramel);color:var(--caramel)">Edit</a>
+                <form action="/admin/products/<%= product._id %>?_method=DELETE" method="POST"
+                      onsubmit="return confirm('Delete <%= product.name %>?')">
+                  <button type="submit" class="btn btn-sm" style="border:1.5px solid var(--danger);color:var(--danger)">Delete</button>
+                </form>
+              </div>
+            </td>
+          </tr>
+        <% }) %>
+      </tbody>
+    </table>
+  </main>
+</div>
+</body></html>

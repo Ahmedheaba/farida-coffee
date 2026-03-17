@@ -1,0 +1,93 @@
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">Your Cart</h1>
+    <div class="section-line"></div>
+
+    <% if (cart.length === 0) { %>
+      <div style="text-align:center;padding:80px 0;color:var(--warm-gray)">
+        <div style="font-size:4rem;margin-bottom:20px">🛒</div>
+        <h2 style="font-family:var(--ff-display);color:var(--espresso);margin-bottom:12px">Your cart is empty</h2>
+        <p>Looks like you haven't added any coffee yet.</p>
+        <a href="/products" class="btn btn-primary" style="margin-top:24px">Browse Our Coffee</a>
+      </div>
+    <% } else { %>
+      <div style="display:grid;grid-template-columns:1fr 340px;gap:40px;align-items:start">
+        <!-- Cart Items -->
+        <div>
+          <table class="cart-table">
+            <thead>
+              <tr>
+                <th colspan="2">Product</th>
+                <th>Price</th>
+                <th>Quantity</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% cart.forEach(item => { %>
+                <tr>
+                  <td style="width:80px">
+                    <img class="cart-item-img"
+                         src="<%= item.image %>"
+                         alt="<%= item.name %>"
+                         onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=80&h=80&fit=crop'">
+                  </td>
+                  <td>
+                    <strong><%= item.name %></strong>
+                  </td>
+                  <td>EGP <%= item.price.toFixed(0) %></td>
+                  <td>
+                    <form action="/cart/update" method="POST" style="display:flex;align-items:center;gap:6px">
+                      <input type="hidden" name="productId" value="<%= item.productId %>">
+                      <input type="number" name="quantity" value="<%= item.quantity %>" min="1"
+                             class="qty-input" onchange="this.form.submit()">
+                    </form>
+                  </td>
+                  <td><strong>EGP <%= (item.price * item.quantity).toFixed(0) %></strong></td>
+                  <td>
+                    <form action="/cart/remove/<%= item.productId %>?_method=DELETE" method="POST">
+                      <button type="submit" style="background:none;border:none;cursor:pointer;color:var(--warm-gray);font-size:1.1rem" title="Remove">✕</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            </tbody>
+          </table>
+
+          <div style="margin-top:16px;display:flex;justify-content:space-between;align-items:center">
+            <a href="/products" class="btn btn-sm" style="border:1.5px solid var(--light-gray)">← Continue Shopping</a>
+            <form action="/cart/clear?_method=DELETE" method="POST">
+              <button type="submit" class="btn btn-sm" style="border:1.5px solid var(--danger);color:var(--danger)">Clear Cart</button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="cart-summary">
+          <h3 style="font-family:var(--ff-display);font-size:1.3rem;margin-bottom:20px">Order Summary</h3>
+          <div class="cart-summary-row">
+            <span>Subtotal (<%= cart.reduce((s,i) => s + i.quantity, 0) %> items)</span>
+            <span>EGP <%= total.toFixed(0) %></span>
+          </div>
+          <div class="cart-summary-row">
+            <span>Shipping</span>
+            <span style="color:var(--success)">EGP 50</span>
+          </div>
+          <div class="cart-summary-total">
+            <span>Total</span>
+            <span>EGP <%= (total + 50).toFixed(0) %></span>
+          </div>
+          <a href="/checkout" class="btn btn-primary btn-block" style="margin-top:24px">
+            Proceed to Checkout →
+          </a>
+          <div style="display:flex;justify-content:center;gap:16px;margin-top:16px">
+            <img src="https://cdn-icons-png.flaticon.com/32/196/196578.png" alt="Visa" style="height:22px;opacity:.5">
+            <img src="https://cdn-icons-png.flaticon.com/32/196/196561.png" alt="Mastercard" style="height:22px;opacity:.5">
+            <span style="font-size:.75rem;color:var(--warm-gray);align-self:center">Cash on Delivery</span>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  </div>
+</section>

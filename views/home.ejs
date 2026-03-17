@@ -1,0 +1,94 @@
+<!-- Hero -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-content">
+      <span class="hero-tag">☕ Specialty Coffee — Cairo</span>
+      <h1 class="display">Coffee that<br><em>moves</em> your soul.</h1>
+      <p>Single-origin beans, expertly roasted. Delivered fresh to your door anywhere in Egypt.</p>
+      <div class="hero-actions">
+        <a href="/products" class="btn btn-primary">Shop Now</a>
+        <a href="/products?category=beans" class="btn btn-outline">Explore Beans</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Category Strip -->
+<section style="background:white;padding:0;border-bottom:1px solid var(--cream-dark)">
+  <div class="container">
+    <div style="display:flex;gap:0;overflow-x:auto">
+      <% ['espresso','filter','cold-brew','beans','equipment'].forEach(cat => { %>
+        <a href="/products?category=<%= cat %>"
+           style="flex:1;min-width:120px;text-align:center;padding:20px 16px;font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);border-right:1px solid var(--cream-dark);transition:all .2s"
+           onmouseover="this.style.background='var(--cream)';this.style.color='var(--espresso)'"
+           onmouseout="this.style.background='white';this.style.color='var(--warm-gray)'">
+          <%= cat.replace('-',' ') %>
+        </a>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Featured Products -->
+<section class="section">
+  <div class="container">
+    <p class="subtitle">Our Selection</p>
+    <h2 class="section-title">Featured Coffees</h2>
+    <div class="section-line"></div>
+    <div class="products-grid">
+      <% featured.forEach(product => { %>
+        <div class="product-card">
+          <a href="/products/<%= product._id %>">
+            <div class="product-card-img">
+              <img src="<%= product.image %>" alt="<%= product.name %>" loading="lazy"
+                   onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop'">
+            </div>
+          </a>
+          <div class="product-card-body">
+            <div class="product-tag"><%= product.category %> · <%= product.origin || '' %></div>
+            <h3><a href="/products/<%= product._id %>"><%= product.name %></a></h3>
+            <p><%= product.description.substring(0, 90) %>...</p>
+            <div class="stars">
+              ★★★★<%= product.rating >= 4.5 ? '★' : '☆' %>
+              <span class="stars-count">(<%= product.reviewCount %>)</span>
+            </div>
+          </div>
+          <div class="product-card-footer">
+            <div class="product-price">
+              EGP <%= product.price.toFixed(0) %>
+              <span class="currency">/ <%= product.weight || '250g' %></span>
+            </div>
+            <form action="/cart/add" method="POST">
+              <input type="hidden" name="productId" value="<%= product._id %>">
+              <input type="hidden" name="quantity" value="1">
+              <button type="submit" class="btn btn-dark btn-sm">Add to Cart</button>
+            </form>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+    <div style="text-align:center;margin-top:40px">
+      <a href="/products" class="btn btn-primary">View All Coffees →</a>
+    </div>
+  </div>
+</section>
+
+<!-- Why Farida -->
+<section class="section" style="background:var(--espresso);color:var(--cream)">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;text-align:center">
+      <% [
+        { icon: '🌍', title: 'Single Origin', text: 'Direct relationships with farms in Ethiopia, Colombia, Kenya & more.' },
+        { icon: '🔥', title: 'Fresh Roasted', text: 'Roasted in small batches weekly. Never sitting in a warehouse.' },
+        { icon: '🚚', title: 'Fast Delivery', text: 'Free delivery anywhere in Cairo. Egypt-wide within 3-5 days.' },
+        { icon: '💯', title: '100% Arabica', text: 'We only source the finest Arabica beans. Quality guaranteed.' }
+      ].forEach(f => { %>
+        <div>
+          <div style="font-size:2.5rem;margin-bottom:16px"><%= f.icon %></div>
+          <h3 style="color:var(--cream);font-size:1.1rem;margin-bottom:10px"><%= f.title %></h3>
+          <p style="color:rgba(250,246,241,.6);font-size:.9rem"><%= f.text %></p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>

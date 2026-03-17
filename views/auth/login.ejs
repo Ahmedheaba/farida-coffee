@@ -1,0 +1,73 @@
+<section
+  style="
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: var(--cream);
+  "
+>
+  <div class="container" style="max-width: 440px">
+    <div style="text-align: center; margin-bottom: 36px">
+      <div
+        style="
+          font-family: var(--ff-display);
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 8px;
+        "
+      >
+        Farida<span style="color: var(--caramel)">.</span>Coffee
+      </div>
+      <h1 style="font-size: 1.5rem">Welcome back</h1>
+      <p style="color: var(--warm-gray)">Sign in to your account</p>
+    </div>
+    <div class="checkout-card">
+      <form action="/auth/login" method="POST">
+        <input
+          type="hidden"
+          name="returnTo"
+          value="<%= locals.returnTo || '/' %>"
+        />
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            required
+            placeholder="you@example.com"
+            autofocus
+          />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            required
+            placeholder="••••••••"
+          />
+        </div>
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          style="margin-top: 8px"
+        >
+          Sign In
+        </button>
+      </form>
+      <p
+        style="
+          text-align: center;
+          margin-top: 20px;
+          font-size: 0.9rem;
+          color: var(--warm-gray);
+        "
+      >
+        New here?
+        <a href="/auth/register" style="font-weight: 700">Create an account</a>
+      </p>
+    </div>
+  </div>
+</section>

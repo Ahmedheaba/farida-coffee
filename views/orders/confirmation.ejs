@@ -1,0 +1,65 @@
+<section class="section">
+  <div class="container" style="max-width:680px">
+    <div style="text-align:center;padding:40px 0 32px">
+      <div style="width:80px;height:80px;background:var(--cream-dark);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:2.5rem;margin:0 auto 24px">
+        ✅
+      </div>
+      <h1 style="font-family:var(--ff-display);font-size:2rem;margin-bottom:12px">Order Confirmed!</h1>
+      <p style="color:var(--warm-gray);font-size:1.05rem">
+        Thank you for your order. We'll start preparing your coffee right away.
+      </p>
+    </div>
+
+    <div class="checkout-card">
+      <!-- Order Header -->
+      <div style="display:flex;justify-content:space-between;align-items:center;padding-bottom:20px;border-bottom:1px solid var(--cream-dark);margin-bottom:20px">
+        <div>
+          <div style="font-size:.8rem;color:var(--warm-gray);text-transform:uppercase;letter-spacing:.08em">Order Number</div>
+          <div style="font-family:var(--ff-display);font-size:1.4rem;font-weight:700"><%= order.orderNumber %></div>
+        </div>
+        <span class="badge badge-<%= order.status %>"><%= order.status %></span>
+      </div>
+
+      <!-- Items -->
+      <% order.items.forEach(item => { %>
+        <div style="display:flex;gap:12px;align-items:center;padding:10px 0;border-bottom:1px solid var(--cream-dark)">
+          <img src="<%= item.image %>" alt="" style="width:52px;height:52px;object-fit:cover;border-radius:8px"
+               onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=60&h=60&fit=crop'">
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:.95rem"><%= item.name %></div>
+            <div style="font-size:.82rem;color:var(--warm-gray)">Qty: <%= item.quantity %> × EGP <%= item.price %></div>
+          </div>
+          <div style="font-weight:700">EGP <%= (item.price * item.quantity).toFixed(0) %></div>
+        </div>
+      <% }) %>
+
+      <!-- Totals -->
+      <div style="padding-top:16px;margin-bottom:20px">
+        <div class="cart-summary-row"><span>Subtotal</span><span>EGP <%= order.subtotal.toFixed(0) %></span></div>
+        <div class="cart-summary-row"><span>Shipping</span><span>EGP <%= order.shippingCost %></span></div>
+        <div class="cart-summary-total"><span>Total Paid</span><span>EGP <%= order.total.toFixed(0) %></span></div>
+      </div>
+
+      <!-- Delivery Info -->
+      <div style="background:var(--cream);border-radius:10px;padding:20px;display:grid;grid-template-columns:1fr 1fr;gap:20px">
+        <div>
+          <div style="font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:6px">Deliver To</div>
+          <div style="font-weight:700"><%= order.customer.name %></div>
+          <div style="font-size:.9rem;color:var(--warm-gray)"><%= order.shippingAddress.street %>, <%= order.shippingAddress.city %></div>
+        </div>
+        <div>
+          <div style="font-size:.78rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--warm-gray);margin-bottom:6px">Payment</div>
+          <div style="font-weight:700"><%= order.paymentMethod.replace('-',' ').replace(/\b\w/g,l=>l.toUpperCase()) %></div>
+          <div style="font-size:.9rem;color:var(--warm-gray)">Status: <%= order.paymentStatus %></div>
+        </div>
+      </div>
+
+      <div style="text-align:center;margin-top:28px">
+        <p style="font-size:.85rem;color:var(--warm-gray);margin-bottom:20px">
+          A confirmation email will be sent to <strong><%= order.customer.email %></strong>
+        </p>
+        <a href="/products" class="btn btn-primary">Continue Shopping</a>
+      </div>
+    </div>
+  </div>
+</section>

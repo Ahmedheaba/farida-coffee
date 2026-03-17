@@ -1,0 +1,93 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Admin — Farida Coffee</title><link rel="stylesheet" href="/css/style.css"></head><body>
+<div class="admin-layout">
+  <aside class="admin-sidebar">
+    <div class="sidebar-brand">Farida<span>.</span>Coffee<br><small style="font-size:.7rem;opacity:.5;font-family:var(--ff-body)">Admin Panel</small></div>
+    <nav class="sidebar-nav">
+      <a href="/admin">📊 Dashboard</a>
+      <a href="/admin/products">☕ Products</a>
+      <a href="/admin/orders" class="active">📦 Orders</a>
+      <a href="/" target="_blank">🌐 View Store</a>
+      <a href="/auth/logout">🚪 Logout</a>
+    </nav>
+  </aside>
+  <main class="admin-main">
+    <div class="admin-header">
+      <a href="/admin/orders" style="font-size:.85rem;color:var(--warm-gray)">← Back to Orders</a>
+      <div style="display:flex;align-items:center;gap:16px;margin-top:8px">
+        <h1>Order <%= order.orderNumber %></h1>
+        <span class="badge badge-<%= order.status %>" style="font-size:.85rem"><%= order.status %></span>
+      </div>
+      <p style="color:var(--warm-gray);font-size:.85rem">Placed on <%= new Date(order.createdAt).toLocaleString() %></p>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 320px;gap:24px">
+      <div>
+        <!-- Items -->
+        <div class="checkout-card" style="margin-bottom:24px">
+          <h3 style="font-family:var(--ff-display);margin-bottom:20px">Order Items</h3>
+          <% order.items.forEach(item => { %>
+            <div style="display:flex;gap:12px;align-items:center;padding:12px 0;border-bottom:1px solid var(--cream-dark)">
+              <img src="<%= item.image %>" alt="" style="width:56px;height:56px;object-fit:cover;border-radius:8px"
+                   onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=60&h=60&fit=crop'">
+              <div style="flex:1">
+                <div style="font-weight:700"><%= item.name %></div>
+                <div style="font-size:.85rem;color:var(--warm-gray)">EGP <%= item.price %> × <%= item.quantity %></div>
+              </div>
+              <div style="font-weight:700">EGP <%= (item.price * item.quantity).toFixed(0) %></div>
+            </div>
+          <% }) %>
+          <div style="padding-top:16px">
+            <div class="cart-summary-row"><span>Subtotal</span><span>EGP <%= order.subtotal.toFixed(0) %></span></div>
+            <div class="cart-summary-row"><span>Shipping</span><span>EGP <%= order.shippingCost %></span></div>
+            <div class="cart-summary-total"><span>Total</span><span>EGP <%= order.total.toFixed(0) %></span></div>
+          </div>
+        </div>
+
+        <!-- Update Status -->
+        <div class="checkout-card">
+          <h3 style="font-family:var(--ff-display);margin-bottom:20px">Update Status</h3>
+          <form action="/admin/orders/<%= order._id %>/status?_method=PUT" method="POST" style="display:flex;gap:12px">
+            <select name="status" class="form-control" style="flex:1">
+              <% ['pending','confirmed','processing','shipped','delivered','cancelled'].forEach(s => { %>
+                <option value="<%= s %>" <%= order.status === s ? 'selected' : '' %>><%= s.charAt(0).toUpperCase() + s.slice(1) %></option>
+              <% }) %>
+            </select>
+            <button type="submit" class="btn btn-primary">Update</button>
+          </form>
+        </div>
+      </div>
+
+      <!-- Customer & Shipping Info -->
+      <div>
+        <div class="checkout-card" style="margin-bottom:20px">
+          <h3 style="font-family:var(--ff-display);font-size:1rem;margin-bottom:16px">Customer</h3>
+          <div style="font-weight:700;margin-bottom:4px"><%= order.customer.name %></div>
+          <div style="font-size:.88rem;color:var(--warm-gray)"><%= order.customer.email %></div>
+          <% if (order.customer.phone) { %>
+            <div style="font-size:.88rem;color:var(--warm-gray)"><%= order.customer.phone %></div>
+          <% } %>
+        </div>
+        <div class="checkout-card" style="margin-bottom:20px">
+          <h3 style="font-family:var(--ff-display);font-size:1rem;margin-bottom:16px">Shipping Address</h3>
+          <div style="font-size:.9rem;line-height:1.7;color:var(--warm-gray)">
+            <%= order.shippingAddress.street %><br>
+            <%= order.shippingAddress.city %><%= order.shippingAddress.zip ? ', ' + order.shippingAddress.zip : '' %><br>
+            Egypt
+          </div>
+        </div>
+        <div class="checkout-card">
+          <h3 style="font-family:var(--ff-display);font-size:1rem;margin-bottom:16px">Payment</h3>
+          <div style="font-size:.88rem">
+            <div style="margin-bottom:6px"><strong>Method:</strong> <%= order.paymentMethod.replace('-',' ') %></div>
+            <div><strong>Status:</strong>
+              <span style="color:<%= order.paymentStatus === 'paid' ? 'var(--success)' : 'var(--warm-gray)' %>">
+                <%= order.paymentStatus %>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+</div>
+</body></html>
