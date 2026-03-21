@@ -1,16 +1,15 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const Product = require('../models/Product');
+const Product = require("../models/Product");
 
 // GET / - Homepage
-router.get('/', async (req, res) => {
+router.get("/", async (req, res, next) => {
   try {
     const featured = await Product.find({ featured: true }).limit(6);
-    const categories = ['espresso', 'filter', 'cold-brew', 'beans'];
-    res.render('home', { title: 'Farida Coffee', featured, categories });
+    const categories = ["espresso", "filter", "cold-brew", "beans"];
+    res.render("home", { title: "Farida Coffee", featured, categories });
   } catch (err) {
     next(err);
   }
 });
-
 module.exports = router;

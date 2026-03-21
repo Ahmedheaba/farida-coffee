@@ -1,6 +1,15 @@
 <section class="section">
   <div class="container">
-    <h1 class="section-title">Our Coffee</h1>
+<% if (filters.search) { %>
+  <h1 class="section-title">
+    Results for "<%= filters.search %>"
+  </h1>
+  <a href="/products" style="font-size:.85rem;color:var(--warm-gray);display:inline-block;margin-bottom:8px">
+    ✕ Clear search
+  </a>
+<% } else { %>
+  <h1 class="section-title">Our Coffee</h1>
+<% } %>
     <div class="section-line"></div>
 
     <!-- Filters Bar -->

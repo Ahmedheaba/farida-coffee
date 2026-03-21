@@ -9,8 +9,18 @@ router.get("/", async (req, res, next) => {
     const { category, search, sort, min, max } = req.query;
     let query = {};
 
+    // Search by name or description
+    if (search && search.trim() !== "") {
+      query.$or = [
+        { name: { $regex: search, $options: "i" } },
+        { description: { $regex: search, $options: "i" } },
+        { origin: { $regex: search, $options: "i" } },
+        { category: { $regex: search, $options: "i" } },
+      ];
+    }
+
     if (category) query.category = category;
-    if (search) query.$text = { $search: search };
+
     if (min || max) {
       query.price = {};
       if (min) query.price.$gte = Number(min);
@@ -23,13 +33,35 @@ router.get("/", async (req, res, next) => {
     if (sort === "rating") sortObj = { rating: -1 };
 
     const products = await Product.find(query).sort(sortObj);
+
     res.render("products/index", {
-      title: "Our Coffee",
+      title: search ? `Search: "${search}"` : "Our Coffee",
       products,
       filters: req.query,
     });
   } catch (err) {
     next(err);
+  }
+});
+// GET /products/search-suggestions — Live search API
+router.get("/search-suggestions", async (req, res) => {
+  try {
+    const q = req.query.q || "";
+    if (q.length < 2) return res.json([]);
+
+    const products = await Product.find({
+      $or: [
+        { name: { $regex: q, $options: "i" } },
+        { category: { $regex: q, $options: "i" } },
+        { origin: { $regex: q, $options: "i" } },
+      ],
+    })
+      .limit(5)
+      .select("name category price _id");
+
+    res.json(products);
+  } catch (err) {
+    res.json([]);
   }
 });
 
