@@ -171,53 +171,135 @@ h4 {
 }
 
 /* ─── Hero ──────────────────────────────────────────────────────────────── */
+/* ─── Hero ──────────────────────────────────────────────────────────────── */
 .hero {
-  min-height: 88vh;
+  min-height: 92vh;
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, var(--espresso) 55%, var(--roast) 100%);
+  justify-content: center;
+  background: #0a0a0a !important;
   position: relative;
   overflow: hidden;
+  padding: 0;
 }
+
+/* Grain texture only — no glow, no gradient */
 .hero::before {
   content: "";
   position: absolute;
   inset: 0;
-  background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+  opacity: 0.35;
+  z-index: 0;
+  pointer-events: none;
 }
-.hero-content {
+
+/* Remove the glow — delete the ::after entirely */
+.hero::after {
+  display: none;
+}
+
+.hero .container {
   position: relative;
   z-index: 1;
-  max-width: 620px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 92vh;
+  padding: 60px 24px;
 }
+
+.hero-content {
+  max-width: 720px;
+}
+
+/* Hero text */
+.hero h1,
+.hero .display {
+  color: #ffffff !important;
+  line-height: 1.05;
+  margin-bottom: 20px;
+}
+
+.hero p {
+  color: rgba(255, 255, 255, 0.6) !important;
+  font-size: 1.1rem;
+  margin-bottom: 36px;
+  max-width: 540px;
+}
+
+/* Hero tag pill */
 .hero-tag {
   display: inline-block;
-  background: rgba(232, 168, 56, 0.2);
-  color: var(--gold);
+  background: rgba(255, 255, 255, 0.07) !important;
+  color: rgba(255, 255, 255, 0.75) !important;
+  border: 1px solid rgba(255, 255, 255, 0.15) !important;
   padding: 6px 16px;
   border-radius: 50px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   margin-bottom: 24px;
 }
-.hero h1 {
-  color: var(--cream);
-  margin-bottom: 20px;
+
+/* Buttons on black hero */
+.hero .btn-primary {
+  background: var(--caramel);
+  border-color: var(--caramel);
+  color: white;
 }
-.hero p {
-  color: rgba(250, 246, 241, 0.7);
-  font-size: 1.15rem;
-  margin-bottom: 40px;
+.hero .btn-primary:hover {
+  background: var(--gold);
+  border-color: var(--gold);
 }
+.hero .btn-outline {
+  background: transparent !important;
+  color: rgba(255, 255, 255, 0.9) !important;
+  border-color: rgba(255, 255, 255, 0.3) !important;
+}
+.hero .btn-outline:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  border-color: rgba(255, 255, 255, 0.55) !important;
+  color: #fff !important;
+}
+
 .hero-actions {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
 }
 
-/* ─── Buttons ───────────────────────────────────────────────────────────── */
+/* Dark mode — stays the same */
+body.dark .hero {
+  background: #0a0a0a !important;
+}
+
+/* Mobile */
+@media (max-width: 768px) {
+  .hero .container {
+    min-height: 80vh;
+    padding: 60px 16px;
+  }
+  .hero {
+    min-height: 80vh;
+  }
+}
+@media (max-width: 480px) {
+  .hero .container {
+    min-height: 85vh;
+  }
+  .hero-actions {
+    justify-content: center;
+  }
+  .hero-content {
+    text-align: center;
+  }
+  .hero-tag {
+    display: inline-block;
+  }
+} /* ─── Buttons ───────────────────────────────────────────────────────────── */
 .btn {
   display: inline-flex;
   align-items: center;
@@ -992,6 +1074,54 @@ body.dark {
   color: #faf6f1;
 }
 
+/* Hero text fix in dark mode */
+body.dark .hero h1,
+body.dark .hero .display {
+  color: #faf6f1 !important;
+}
+
+body.dark .hero p {
+  color: rgba(250, 246, 241, 0.85) !important;
+}
+
+/* Outline button fix in dark mode */
+body.dark .btn-outline {
+  color: #faf6f1 !important;
+  border-color: rgba(250, 246, 241, 0.6) !important;
+}
+body.dark .btn-outline:hover {
+  background: rgba(250, 246, 241, 0.15) !important;
+  color: #faf6f1 !important;
+}
+
+/* Hero tag fix */
+body.dark .hero {
+  background: #0a0a0a;
+}
+
+/* General headings fix */
+body.dark h1,
+body.dark h2,
+body.dark h3,
+body.dark h4 {
+  color: #faf6f1;
+}
+
+/* Product card text */
+body.dark .product-card-body h3 a {
+  color: #faf6f1;
+}
+body.dark .product-card-body p {
+  color: var(--warm-gray);
+}
+body.dark .product-tag {
+  color: var(--caramel);
+}
+
+/* Subtitle text */
+body.dark .subtitle {
+  color: var(--warm-gray);
+}
 /* Navbar in dark mode */
 body.dark .navbar {
   background: rgba(26, 18, 8, 0.95);
@@ -1061,7 +1191,6 @@ body.dark .cart-summary-row {
 .hero {
   background: linear-gradient(135deg, #1a0a04 55%, #3d1a0a 100%);
 }
-
 /* Order tracking */
 body.dark .admin-sidebar {
   background: #0d0904;
@@ -1089,4 +1218,81 @@ body.dark .admin-main {
 .dark-toggle:hover {
   border-color: var(--caramel);
   color: var(--caramel);
+}
+/* ─── Dark Mode Fixes ────────────────────────────────────────────────────── */
+
+/* Price on product page */
+body.dark .product-price {
+  color: #faf6f1 !important;
+}
+body.dark .product-price .currency {
+  color: var(--warm-gray) !important;
+}
+
+/* Review cards */
+body.dark div[style*="background:white"],
+body.dark div[style*="background: white"] {
+  background: #241a0f !important;
+  color: #faf6f1 !important;
+}
+
+/* Review section background */
+body.dark section[style*="background:var(--cream)"] {
+  background: #1a1208 !important;
+}
+
+/* Share Your Experience title */
+body.dark h3[style*="font-family:var(--ff-display)"] {
+  color: #faf6f1 !important;
+}
+
+/* All h3 inside white cards in dark mode */
+body.dark .checkout-card h3,
+body.dark .cart-summary h3 {
+  color: #faf6f1 !important;
+}
+
+/* Review summary card number */
+body.dark div[style*="font-family:var(--ff-display);font-size:4rem"] {
+  color: #faf6f1 !important;
+}
+
+/* Muted text inside dark cards */
+body.dark div[style*="background:#FAF6F1"] {
+  background: #2c1a0e !important;
+}
+body.dark div[style*="background:var(--cream)"] {
+  background: #241a0f !important;
+}
+
+/* Login to review card */
+body.dark div[style*="text-align:center;padding:40px"] {
+  background: #241a0f !important;
+  color: #faf6f1 !important;
+}
+body.dark div[style*="text-align:center;padding:40px"] p {
+  color: var(--warm-gray) !important;
+}
+body.dark div[style*="text-align:center;padding:40px"] h3 {
+  color: #faf6f1 !important;
+}
+
+/* Quantity input on product page */
+body.dark input[type="number"] {
+  background: #241a0f !important;
+  color: #faf6f1 !important;
+  border-color: #3d2e1e !important;
+}
+
+/* Product page price box */
+body.dark div[style*="background:white;border-radius:16px"] {
+  background: #241a0f !important;
+}
+
+/* Already reviewed card */
+body.dark div[style*="background:var(--cream);border-radius:10px"] {
+  background: #2c1a0e !important;
+}
+body.dark div[style*="background:var(--cream);border-radius:10px"] div {
+  color: #faf6f1 !important;
 }
