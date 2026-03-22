@@ -2,11 +2,11 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const session = require("express-session");
+const passport = require("./config/passport");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
 const expressLayouts = require("express-ejs-layouts");
 const path = require("path");
-
 const app = express();
 
 // ─── Database Connection ───────────────────────────────────────────────────
@@ -32,9 +32,13 @@ app.use(
     secret: process.env.SESSION_SECRET || "farida-coffee-secret-2024",
     resave: false,
     saveUninitialized: false,
-    cookie: { maxAge: 1000 * 60 * 60 * 24 }, // 24 hours
+    cookie: { maxAge: 1000 * 60 * 60 * 24 },
   }),
 );
+
+// ✅ Add these two lines after session
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use(flash());
 

@@ -80,3 +80,60 @@ if (searchInput) {
     }
   });
 }
+// ─── Mobile hamburger menu ────────────────────────────────────────────────
+function toggleMenu() {
+  const nav = document.getElementById("navbar-nav");
+  const hamburger = document.getElementById("hamburger");
+  const isOpen = nav.classList.toggle("open");
+  hamburger.classList.toggle("open", isOpen);
+  document.body.style.overflow = isOpen ? "hidden" : "";
+}
+
+// Close menu when a link is clicked
+document.querySelectorAll(".navbar-nav a").forEach((link) => {
+  link.addEventListener("click", () => {
+    document.getElementById("navbar-nav").classList.remove("open");
+    document.getElementById("hamburger").classList.remove("open");
+    document.body.style.overflow = "";
+  });
+});
+
+// Close menu when clicking outside
+document.addEventListener("click", (e) => {
+  const nav = document.getElementById("navbar-nav");
+  const hamburger = document.getElementById("hamburger");
+  if (
+    nav &&
+    hamburger &&
+    !nav.contains(e.target) &&
+    !hamburger.contains(e.target) &&
+    nav.classList.contains("open")
+  ) {
+    nav.classList.remove("open");
+    hamburger.classList.remove("open");
+    document.body.style.overflow = "";
+  }
+});
+// ─── Dark Mode ────────────────────────────────────────────────────────────
+function toggleDark() {
+  const isDark = document.body.classList.toggle("dark");
+  localStorage.setItem("darkMode", isDark ? "enabled" : "disabled");
+  updateDarkToggle(isDark);
+}
+
+function updateDarkToggle(isDark) {
+  const icon = document.getElementById("dark-icon");
+  const label = document.getElementById("dark-label");
+  if (!icon || !label) return;
+  icon.textContent = isDark ? "☀️" : "🌙";
+  label.textContent = isDark ? "Light" : "Dark";
+}
+
+// Apply saved preference on page load
+(function () {
+  const saved = localStorage.getItem("darkMode");
+  if (saved === "enabled") {
+    document.body.classList.add("dark");
+    updateDarkToggle(true);
+  }
+})();

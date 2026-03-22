@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const User = require("../models/User");
+const passport = require("../config/passport");
 
 // GET /auth/login
 router.get("/login", (req, res) => {
@@ -66,5 +67,27 @@ router.get("/logout", (req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
+// GET /auth/google — Redirect to Google
+router.get(
+  "/google",
+  passport.authenticate("google", { scope: ["profile", "email"] }),
+);
+
+// GET /auth/google/callback — Google redirects here
+router.get(
+  "/google/callback",
+  passport.authenticate("google", {
+    failureRedirect: "/auth/login",
+    failureFlash: true,
+  }),
+  async (req, res) => {
+    // Save user info to session (same as normal login)
+    req.session.userId = req.user._id;
+    req.session.userName = req.user.name;
+    req.session.isAdmin = req.user.role === "admin";
+    req.flash("success", `Welcome, ${req.user.name}!`);
+    res.redirect("/");
+  },
+);
 
 module.exports = router;
