@@ -61,5 +61,40 @@
         <a href="/products" class="btn btn-primary">Continue Shopping</a>
       </div>
     </div>
+    <!-- Guest: encourage registration -->
+<% if (!currentUser) { %>
+  <div style="background:linear-gradient(135deg,var(--espresso),var(--roast));border-radius:16px;padding:28px;margin-top:20px;text-align:center;color:var(--cream)">
+    <div style="font-size:2rem;margin-bottom:12px">🎉</div>
+    <h3 style="font-family:var(--ff-display);color:var(--cream);font-size:1.2rem;margin-bottom:8px">
+      Want to track your order?
+    </h3>
+    <p style="color:rgba(250,246,241,.75);font-size:.9rem;margin-bottom:20px">
+      Create a free account using the same email
+      <strong style="color:var(--cream)"><%= order.customer.email %></strong>
+      to track this order and get exclusive offers.
+    </p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+      <a href="/auth/register?email=<%= order.customer.email %>"
+         class="btn btn-primary">
+        Create Free Account
+      </a>
+      <a href="/products" class="btn btn-outline">
+        Continue Shopping
+      </a>
+    </div>
+  </div>
+<% } %>
+
+<!-- Guest: track order by email -->
+<% if (order.isGuest) { %>
+  <div style="background:var(--cream);border-radius:12px;padding:20px;margin-top:16px;text-align:center">
+    <p style="font-size:.88rem;color:var(--warm-gray);margin:0">
+      📧 To track your order, go to
+      <a href="/orders/track" style="color:var(--caramel);font-weight:700">Track My Order</a>
+      and enter your email + order number
+      <strong><%= order.orderNumber %></strong>
+    </p>
+  </div>
+<% } %>
   </div>
 </section>

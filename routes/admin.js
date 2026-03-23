@@ -10,14 +10,20 @@ const { requireAdmin } = require("../middleware/auth");
 
 // ─── Multer setup for product images ─────────────────────────────────────
 const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "public/images/products"),
+  destination: (req, file, cb) => {
+    const dir = "public/images/products";
+    require("fs").mkdirSync(dir, { recursive: true });
+    cb(null, dir);
+  },
   filename: (req, file, cb) => {
     const unique = Date.now() + "-" + Math.round(Math.random() * 1e9);
     cb(null, unique + path.extname(file.originalname));
   },
 });
-const upload = multer({ storage, limits: { fileSize: 5 * 1024 * 1024 } }); // 5MB
-
+const upload = multer({
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 },
+});
 // All admin routes require admin role
 router.use(requireAdmin);
 
@@ -66,19 +72,34 @@ router.get("/products/new", (req, res) => {
   res.render("admin/product-form", { title: "Add Product", product: null });
 });
 
-router.post("/products", upload.single("image"), async (req, res, next) => {
-  try {
-    const data = req.body;
-    if (req.file) data.image = "/images/products/" + req.file.filename;
-    data.featured = data.featured === "on";
-    await Product.create(data);
-    req.flash("success", "Product created!");
-    res.redirect("/admin/products");
-  } catch (err) {
-    next(err);
-  }
-});
-
+router.post(
+  "/products",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "images", maxCount: 5 },
+  ]),
+  async (req, res, next) => {
+    try {
+      const data = req.body;
+      // Main image
+      if (req.files["image"]) {
+        data.image = "/images/products/" + req.files["image"][0].filename;
+      }
+      // Additional images
+      if (req.files["images"]) {
+        data.images = req.files["images"].map(
+          (f) => "/images/products/" + f.filename,
+        );
+      }
+      data.featured = data.featured === "on";
+      await Product.create(data);
+      req.flash("success", "Product created!");
+      res.redirect("/admin/products");
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 router.get("/products/:id/edit", async (req, res, next) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -88,20 +109,34 @@ router.get("/products/:id/edit", async (req, res, next) => {
   }
 });
 
-router.put("/products/:id", upload.single("image"), async (req, res, next) => {
-  try {
-    const data = req.body;
-    if (req.file) data.image = "/images/products/" + req.file.filename;
-    data.featured = data.featured === "on";
-    await Product.findByIdAndUpdate(req.params.id, data, {
-      runValidators: true,
-    });
-    req.flash("success", "Product updated!");
-    res.redirect("/admin/products");
-  } catch (err) {
-    next(err);
-  }
-});
+router.put(
+  "/products/:id",
+  upload.fields([
+    { name: "image", maxCount: 1 },
+    { name: "images", maxCount: 5 },
+  ]),
+  async (req, res, next) => {
+    try {
+      const data = req.body;
+      if (req.files["image"]) {
+        data.image = "/images/products/" + req.files["image"][0].filename;
+      }
+      if (req.files["images"] && req.files["images"].length > 0) {
+        data.images = req.files["images"].map(
+          (f) => "/images/products/" + f.filename,
+        );
+      }
+      data.featured = data.featured === "on";
+      await Product.findByIdAndUpdate(req.params.id, data, {
+        runValidators: true,
+      });
+      req.flash("success", "Product updated!");
+      res.redirect("/admin/products");
+    } catch (err) {
+      next(err);
+    }
+  },
+);
 
 router.delete("/products/:id", async (req, res, next) => {
   try {

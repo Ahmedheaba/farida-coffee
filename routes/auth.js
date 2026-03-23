@@ -34,9 +34,11 @@ router.post("/login", async (req, res) => {
 
 // GET /auth/register
 router.get("/register", (req, res) => {
-  res.render("auth/register", { title: "Create Account" });
+  res.render("auth/register", {
+    title: "Create Account",
+    prefillEmail: req.query.email || "",
+  });
 });
-
 // POST /auth/register
 router.post("/register", async (req, res) => {
   const { name, email, password, confirm } = req.body;

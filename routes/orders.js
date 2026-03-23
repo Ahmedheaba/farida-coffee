@@ -55,4 +55,41 @@ router.get("/:id/confirmation", async (req, res, next) => {
   }
 });
 
+// GET /orders/track — Guest order tracking page
+router.get("/track", (req, res) => {
+  res.render("orders/track", {
+    title: "Track Your Order",
+    order: null,
+    error: null,
+  });
+});
+
+// POST /orders/track — Look up guest order
+router.post("/track", async (req, res, next) => {
+  try {
+    const { email, orderNumber } = req.body;
+
+    const order = await Order.findOne({
+      orderNumber: orderNumber.trim().toUpperCase(),
+      "customer.email": email.trim().toLowerCase(),
+    });
+
+    if (!order) {
+      return res.render("orders/track", {
+        title: "Track Your Order",
+        order: null,
+        error:
+          "No order found with that email and order number. Please check and try again.",
+      });
+    }
+
+    res.render("orders/tracking", {
+      title: `Order ${order.orderNumber}`,
+      order,
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
 module.exports = router;

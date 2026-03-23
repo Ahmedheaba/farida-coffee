@@ -71,13 +71,29 @@
               </div>
             </div>
             <div class="product-card-footer">
-              <div class="product-price">EGP <%= product.price.toFixed(0) %></div>
-              <form action="/cart/add" method="POST">
-                <input type="hidden" name="productId" value="<%= product._id %>">
-                <input type="hidden" name="quantity" value="1">
-                <button type="submit" class="btn btn-dark btn-sm">Add to Cart</button>
-              </form>
-            </div>
+  <div class="product-price">EGP <%= product.price.toFixed(0) %></div>
+  <div style="display:flex;gap:8px;align-items:center">
+    <!-- Wishlist heart button -->
+    <% if (currentUser) { %>
+      <button class="wishlist-btn"
+              data-product-id="<%= product._id %>"
+              onclick="toggleWishlist(this, '<%= product._id %>')"
+              style="background:none;border:1.5px solid var(--light-gray);
+                     border-radius:50%;width:36px;height:36px;
+                     cursor:pointer;font-size:1rem;
+                     display:flex;align-items:center;justify-content:center;
+                     transition:all .25s;flex-shrink:0"
+              title="Save to wishlist">
+        🤍
+      </button>
+    <% } %>
+    <form action="/cart/add" method="POST">
+      <input type="hidden" name="productId" value="<%= product._id %>">
+      <input type="hidden" name="quantity" value="1">
+      <button type="submit" class="btn btn-dark btn-sm">Add to Cart</button>
+    </form>
+  </div>
+</div>
           </div>
         <% }) %>
       </div>

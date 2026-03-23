@@ -23,7 +23,22 @@
 <nav class="navbar">
   <div class="navbar-inner">
     <a href="/" class="navbar-brand">Farida<span>.</span>Coffee</a>
-
+    <% if (!currentUser) { %>
+  <li><a href="/orders/track">Track Order</a></li>
+<% } else { %>
+<% } %>
+<% if (currentUser && !isAdmin) { %>
+  <li>
+    <a href="/wishlist" style="display:flex;align-items:center;gap:6px">
+      ❤️
+      <% if (wishlistCount > 0) { %>
+        <span class="cart-badge" style="background:var(--danger)">
+          <%= wishlistCount %>
+        </span>
+      <% } %>
+    </a>
+  </li>
+<% } %>
     <!-- Search Bar -->
     <form action="/products" method="GET"
           style="display:flex;align-items:center;position:relative"

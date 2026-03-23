@@ -11,6 +11,10 @@ const orderSchema = new mongoose.Schema(
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
+    isGuest: {
+      type: Boolean,
+      default: false,
+    },
     customer: {
       name: { type: String, required: true },
       email: { type: String, required: true },

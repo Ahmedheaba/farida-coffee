@@ -1,3 +1,4 @@
+const translations = require("./config/translations");
 require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
@@ -42,19 +43,69 @@ app.use(passport.session());
 
 app.use(flash());
 
-// ─── Global Template Variables ─────────────────────────────────────────────
+// ─── Language Middleware ───────────────────────────────────────────────────
 app.use((req, res, next) => {
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
-  res.locals.currentUser = req.session.userId || null;
-  res.locals.isAdmin = req.session.isAdmin || false;
-  // Cart item count for navbar badge
-  res.locals.cartCount = req.session.cart
-    ? req.session.cart.reduce((sum, item) => sum + item.quantity, 0)
-    : 0;
+  const lang = req.session.lang || "en";
+  res.locals.t = translations[lang];
+  res.locals.lang = lang;
+
   next();
 });
 
+// ─── Global Template Variables ─────────────────────────────────────────────
+app.use(async (req, res, next) => {
+  try {
+    // Flash messages
+    res.locals.success = req.flash("success");
+    res.locals.error = req.flash("error");
+
+    // User session
+    res.locals.currentUser = req.session.userId || null;
+    res.locals.isAdmin = req.session.isAdmin || false;
+    res.locals.cartCount = req.session.cart
+      ? req.session.cart.reduce((sum, item) => sum + item.quantity, 0)
+      : 0;
+
+    // Wishlist count
+    if (req.session.userId) {
+      const Wishlist = require("./models/Wishlist");
+      const wishlist = await Wishlist.findOne({ user: req.session.userId });
+      res.locals.wishlistCount = wishlist ? wishlist.products.length : 0;
+    } else {
+      res.locals.wishlistCount = 0;
+    }
+
+    // Store identity
+    res.locals.store = {
+      name: process.env.STORE_NAME || "My Store",
+      tagline: process.env.STORE_TAGLINE || "Best products online",
+      description:
+        process.env.STORE_DESCRIPTION ||
+        "Quality products delivered to your door.",
+      city: process.env.STORE_CITY || "Cairo",
+      country: process.env.STORE_COUNTRY || "Egypt",
+      color: process.env.STORE_COLOR || "#C47E3A",
+      email: process.env.STORE_EMAIL || "hello@store.com",
+      phone: process.env.STORE_PHONE || "",
+      whatsapp: process.env.STORE_WHATSAPP || "",
+      instagram: process.env.STORE_INSTAGRAM || "#",
+      facebook: process.env.STORE_FACEBOOK || "#",
+      twitter: process.env.STORE_TWITTER || "#",
+      currency: process.env.CURRENCY || "EGP",
+      shipping: process.env.SHIPPING_COST || 50,
+    };
+
+    // Language
+    const translations = require("./config/translations");
+    const lang = req.session.lang || "en";
+    res.locals.t = translations[lang];
+    res.locals.lang = lang;
+
+    next();
+  } catch (err) {
+    next(err);
+  }
+});
 // ─── Routes ────────────────────────────────────────────────────────────────
 // ─── Routes ────────────────────────────────────────────────────────────────
 app.use("/", require("./routes/home"));
@@ -65,6 +116,7 @@ app.use("/auth", require("./routes/auth"));
 app.use("/admin", require("./routes/admin"));
 app.use("/orders", require("./routes/orders"));
 app.use("/reviews", require("./routes/reviews"));
+app.use("/wishlist", require("./routes/wishlist"));
 
 // ─── 404 Handler ─────────────────────────────────────────────────────────
 app.use((req, res) => {

@@ -1,34 +1,89 @@
-<section style="min-height:80vh;display:flex;align-items:center;background:var(--cream)">
-  <div class="container" style="max-width:440px">
-    <div style="text-align:center;margin-bottom:36px">
-      <div style="font-family:var(--ff-display);font-size:1.8rem;font-weight:700;margin-bottom:8px">
-        Farida<span style="color:var(--caramel)">.</span>Coffee
+<section
+  style="
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    background: var(--cream);
+  "
+>
+  <div class="container" style="max-width: 440px">
+    <div style="text-align: center; margin-bottom: 36px">
+      <div
+        style="
+          font-family: var(--ff-display);
+          font-size: 1.8rem;
+          font-weight: 700;
+          margin-bottom: 8px;
+        "
+      >
+        Farida<span style="color: var(--caramel)">.</span>Coffee
       </div>
-      <h1 style="font-size:1.5rem">Create your account</h1>
-      <p style="color:var(--warm-gray)">Start ordering your favorite coffee</p>
+      <h1 style="font-size: 1.5rem">Create your account</h1>
+      <p style="color: var(--warm-gray)">Start ordering your favorite coffee</p>
     </div>
     <div class="checkout-card">
       <form action="/auth/register" method="POST">
         <div class="form-group">
           <label class="form-label">Full Name</label>
-          <input type="text" name="name" class="form-control" required placeholder="Your name" autofocus>
+          <input
+            type="text"
+            name="name"
+            class="form-control"
+            required
+            placeholder="Your name"
+            autofocus
+          />
         </div>
         <div class="form-group">
           <label class="form-label">Email Address</label>
-          <input type="email" name="email" class="form-control" required placeholder="you@example.com">
+          <input
+            type="email"
+            name="email"
+            class="form-control"
+            required
+            placeholder="you@example.com"
+            value="<%= locals.prefillEmail || '' %>"
+          />
         </div>
         <div class="form-group">
           <label class="form-label">Password</label>
-          <input type="password" name="password" class="form-control" required placeholder="Min 6 characters" minlength="6">
+          <input
+            type="password"
+            name="password"
+            class="form-control"
+            required
+            placeholder="Min 6 characters"
+            minlength="6"
+          />
         </div>
         <div class="form-group">
           <label class="form-label">Confirm Password</label>
-          <input type="password" name="confirm" class="form-control" required placeholder="Repeat password">
+          <input
+            type="password"
+            name="confirm"
+            class="form-control"
+            required
+            placeholder="Repeat password"
+          />
         </div>
-        <button type="submit" class="btn btn-primary btn-block" style="margin-top:8px">Create Account</button>
+        <button
+          type="submit"
+          class="btn btn-primary btn-block"
+          style="margin-top: 8px"
+        >
+          Create Account
+        </button>
       </form>
-      <p style="text-align:center;margin-top:20px;font-size:.9rem;color:var(--warm-gray)">
-        Already have an account? <a href="/auth/login" style="font-weight:700">Sign in</a>
+      <p
+        style="
+          text-align: center;
+          margin-top: 20px;
+          font-size: 0.9rem;
+          color: var(--warm-gray);
+        "
+      >
+        Already have an account?
+        <a href="/auth/login" style="font-weight: 700">Sign in</a>
       </p>
     </div>
   </div>

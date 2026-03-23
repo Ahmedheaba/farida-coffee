@@ -13,11 +13,6 @@ function cartTotal(cart) {
 // GET /checkout
 // GET /checkout
 router.get("/", (req, res) => {
-  // 🔒 Must be logged in
-  if (!req.session.userId) {
-    req.flash("error", "Please login to continue to checkout");
-    return res.redirect("/auth/login");
-  }
   const cart = req.session.cart || [];
   if (cart.length === 0) {
     req.flash("error", "Your cart is empty");
@@ -42,10 +37,10 @@ router.post("/", async (req, res, next) => {
 
     const { name, email, phone, street, city, zip, notes } = req.body;
     const subtotal = cartTotal(cart);
-    console.log("Creating order for user:", req.session.userId);
 
     const order = await Order.create({
-      user: req.session.userId,
+      user: req.session.userId || null, // null for guests
+      isGuest: !req.session.userId, // flag guest orders
       customer: { name, email, phone },
       shippingAddress: { street, city, zip },
       items: cart.map((item) => ({
@@ -61,13 +56,13 @@ router.post("/", async (req, res, next) => {
       paymentMethod: "cash-on-delivery",
       notes,
     });
+
+    // Send owner notification
     try {
       await sendOrderNotification(order);
     } catch (emailErr) {
       console.error("Email failed:", emailErr.message);
     }
-
-    req.session.cart = [];
 
     req.session.cart = [];
     req.flash("success", `Order ${order.orderNumber} placed successfully!`);
@@ -76,7 +71,6 @@ router.post("/", async (req, res, next) => {
     next(err);
   }
 });
-
 // POST /checkout/stripe - Create Stripe payment intent
 router.post("/stripe/intent", async (req, res) => {
   try {

@@ -1,0 +1,80 @@
+<section class="section">
+  <div class="container">
+    <h1 class="section-title">❤️ My Wishlist</h1>
+    <div class="section-line"></div>
+
+    <% if (products.length === 0) { %>
+      <div style="text-align:center;padding:80px 0;color:var(--warm-gray)">
+        <div style="font-size:4rem;margin-bottom:20px">🤍</div>
+        <h2 style="font-family:var(--ff-display);color:var(--espresso);margin-bottom:12px">
+          Your wishlist is empty
+        </h2>
+        <p>Save products you love and come back to buy them later.</p>
+        <a href="/products" class="btn btn-primary" style="margin-top:24px">
+          Browse Products
+        </a>
+      </div>
+    <% } else { %>
+      <p style="color:var(--warm-gray);margin-bottom:32px">
+        <%= products.length %> saved product<%= products.length !== 1 ? 's' : '' %>
+      </p>
+      <div class="products-grid">
+        <% products.forEach(product => { %>
+          <div class="product-card">
+            <a href="/products/<%= product._id %>">
+              <div class="product-card-img">
+                <img src="<%= product.image %>" alt="<%= product.name %>"
+                     onerror="this.src='https://images.unsplash.com/photo-1559056199-641a0ac8b55e?w=400&h=300&fit=crop'">
+              </div>
+            </a>
+            <div class="product-card-body">
+              <div class="product-tag"><%= product.category %></div>
+              <h3>
+                <a href="/products/<%= product._id %>"><%= product.name %></a>
+              </h3>
+              <p><%= product.description.substring(0, 80) %>...</p>
+              <div class="stars">
+                ★★★★<%= product.rating >= 4.5 ? '★' : '☆' %>
+                <span class="stars-count">(<%= product.reviewCount %>)</span>
+              </div>
+            </div>
+            <div class="product-card-footer">
+              <div class="product-price">EGP <%= product.price.toFixed(0) %></div>
+              <div style="display:flex;gap:8px">
+                <!-- Remove from wishlist -->
+                <form action="/wishlist/remove/<%= product._id %>?_method=DELETE" method="POST">
+                  <button type="submit"
+                          style="background:none;border:1.5px solid var(--danger);
+                                 border-radius:50%;width:36px;height:36px;
+                                 cursor:pointer;font-size:.9rem;color:var(--danger);
+                                 display:flex;align-items:center;justify-content:center"
+                          title="Remove from wishlist">✕</button>
+                </form>
+                <!-- Add to cart -->
+                <form action="/cart/add" method="POST">
+                  <input type="hidden" name="productId" value="<%= product._id %>">
+                  <input type="hidden" name="quantity" value="1">
+                  <button type="submit" class="btn btn-dark btn-sm">
+                    Add to Cart
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        <% }) %>
+      </div>
+
+      <!-- Add all to cart -->
+      <div style="text-align:center;margin-top:40px">
+        <form action="/cart/add-multiple" method="POST">
+          <% products.forEach(product => { %>
+            <input type="hidden" name="productIds[]" value="<%= product._id %>">
+          <% }) %>
+          <button type="submit" class="btn btn-primary">
+            🛒 Add All to Cart
+          </button>
+        </form>
+      </div>
+    <% } %>
+  </div>
+</section>

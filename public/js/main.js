@@ -137,3 +137,92 @@ function updateDarkToggle(isDark) {
     updateDarkToggle(true);
   }
 })();
+
+// ─── Wishlist Toggle ──────────────────────────────────────────────────────
+async function toggleWishlist(btn, productId) {
+  try {
+    const res = await fetch("/wishlist/toggle", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ productId }),
+    });
+    const data = await res.json();
+
+    if (data.error) return;
+
+    // Update all heart buttons for this product on the page
+    document
+      .querySelectorAll(`[data-product-id="${productId}"]`)
+      .forEach((b) => {
+        b.innerHTML = data.added ? "❤️" : "🤍";
+        b.style.borderColor = data.added
+          ? "var(--danger)"
+          : "var(--light-gray)";
+      });
+
+    // Update main product page button if exists
+    const mainIcon = document.getElementById("wishlist-icon-main");
+    const mainLabel = document.getElementById("wishlist-label-main");
+    if (mainIcon) mainIcon.textContent = data.added ? "❤️" : "🤍";
+    if (mainLabel)
+      mainLabel.textContent = data.added
+        ? "Saved to Wishlist"
+        : "Save to Wishlist";
+
+    // Update navbar wishlist count
+    const badges = document.querySelectorAll(".wishlist-badge");
+    badges.forEach((b) => {
+      b.textContent = data.count;
+      b.style.display = data.count > 0 ? "flex" : "none";
+    });
+
+    // Show a small toast notification
+    showToast(
+      data.added ? "❤️ Added to wishlist!" : "🤍 Removed from wishlist",
+    );
+  } catch (err) {
+    console.error("Wishlist error:", err);
+  }
+}
+
+// ─── Toast Notification ───────────────────────────────────────────────────
+function showToast(message) {
+  // Remove existing toast
+  const existing = document.getElementById("toast");
+  if (existing) existing.remove();
+
+  const toast = document.createElement("div");
+  toast.id = "toast";
+  toast.style.cssText = `
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: var(--espresso);
+    color: var(--cream);
+    padding: 12px 24px;
+    border-radius: 50px;
+    font-size: .9rem;
+    font-weight: 700;
+    font-family: var(--ff-body);
+    z-index: 9999;
+    box-shadow: 0 8px 24px rgba(0,0,0,.2);
+    transition: transform .3s cubic-bezier(.34,1.56,.64,1);
+    white-space: nowrap;
+  `;
+  toast.textContent = message;
+  document.body.appendChild(toast);
+
+  // Animate in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      toast.style.transform = "translateX(-50%) translateY(0)";
+    });
+  });
+
+  // Animate out after 2.5s
+  setTimeout(() => {
+    toast.style.transform = "translateX(-50%) translateY(80px)";
+    setTimeout(() => toast.remove(), 300);
+  }, 2500);
+}

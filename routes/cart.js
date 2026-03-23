@@ -24,15 +24,8 @@ router.get("/", (req, res) => {
 
 // POST /cart/add
 // POST /cart/add
+// POST /cart/add
 router.post("/add", async (req, res, next) => {
-  // 🔒 Must be logged in
-  if (!req.session.userId) {
-    req.flash(
-      "error",
-      "Please login or create an account to add items to your cart",
-    );
-    return res.redirect("/auth/login");
-  }
   try {
     const { productId, quantity = 1 } = req.body;
     const product = await Product.findById(productId);
@@ -89,4 +82,37 @@ router.delete("/clear", (req, res) => {
   res.redirect("/cart");
 });
 
+// POST /cart/add-multiple — Add all wishlist items to cart
+router.post("/add-multiple", async (req, res, next) => {
+  try {
+    let productIds = req.body["productIds[]"];
+    if (!productIds) return res.redirect("/wishlist");
+    if (!Array.isArray(productIds)) productIds = [productIds];
+
+    const products = await Product.find({ _id: { $in: productIds } });
+    const cart = getCart(req);
+
+    products.forEach((product) => {
+      const existing = cart.find(
+        (item) => item.productId === product._id.toString(),
+      );
+      if (existing) {
+        existing.quantity += 1;
+      } else {
+        cart.push({
+          productId: product._id.toString(),
+          name: product.name,
+          price: product.price,
+          image: product.image,
+          quantity: 1,
+        });
+      }
+    });
+
+    req.flash("success", `${products.length} products added to cart!`);
+    res.redirect("/cart");
+  } catch (err) {
+    next(err);
+  }
+});
 module.exports = router;
