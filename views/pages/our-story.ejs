@@ -1,0 +1,148 @@
+<!-- Hero -->
+<section style="background:#0A0A0A;padding:100px 0;text-align:center;position:relative;overflow:hidden">
+  <div style="position:absolute;inset:0;background:radial-gradient(circle at 50% 50%,rgba(196,126,58,.08) 0%,transparent 70%)"></div>
+  <div class="container" style="position:relative;z-index:1">
+    <p style="color:var(--caramel);font-size:.85rem;font-weight:700;
+              letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">
+      How It All Started
+    </p>
+    <h1 style="font-family:var(--ff-display);font-size:3rem;
+               color:#FAF6F1;margin-bottom:20px;font-style:italic">
+      Our Story
+    </h1>
+    <p style="color:rgba(250,246,241,.6);font-size:1.1rem;
+              max-width:520px;margin:0 auto;line-height:1.8">
+      From a small kitchen in Cairo to delivering specialty coffee
+      across Egypt — this is how Farida Coffee began.
+    </p>
+  </div>
+</section>
+
+<!-- Timeline -->
+<section class="section">
+  <div class="container" style="max-width:800px">
+    <%
+      const timeline = [
+        {
+          year:  '2018',
+          emoji: '☕',
+          title: 'The First Cup',
+          text:  'Farida discovered specialty coffee during a trip to Ethiopia. She returned to Cairo with 2kg of single-origin beans and a dream. Friends and family fell in love with the taste — something Cairo had never experienced before.'
+        },
+        {
+          year:  '2019',
+          emoji: '🔥',
+          title: 'Learning to Roast',
+          text:  'Farida spent a year learning the art of roasting — experimenting in her small Cairo apartment with a home roaster. She studied online, attended workshops, and tasted hundreds of cups until she found her signature roast profile.'
+        },
+        {
+          year:  '2020',
+          emoji: '📦',
+          title: 'First Online Orders',
+          text:  'During the pandemic, Farida started selling coffee online to friends and their networks. Word spread quickly. Within 3 months she had 50 regular customers ordering every week from her home kitchen.'
+        },
+        {
+          year:  '2021',
+          emoji: '🏠',
+          title: 'A Real Roastery',
+          text:  'With growing demand, Farida moved out of her kitchen and into a small roastery in Maadi, Cairo. She hired her first two employees and purchased a professional 5kg drum roaster.'
+        },
+        {
+          year:  '2022',
+          emoji: '🌍',
+          title: 'Direct Trade',
+          text:  'Farida travelled to Colombia and Kenya to meet farmers directly. She built relationships that cut out middlemen — paying farmers 40% above market rate while bringing better quality beans to her customers.'
+        },
+        {
+          year:  '2023',
+          emoji: '🚀',
+          title: 'Egypt-Wide Delivery',
+          text:  'Farida Coffee expanded from Cairo-only delivery to shipping across all of Egypt. From Alexandria to Aswan, coffee lovers everywhere could now enjoy specialty coffee at their doorstep.'
+        },
+        {
+          year:  '2024',
+          emoji: '❤️',
+          title: 'Today',
+          text:  'Farida Coffee now serves thousands of customers across Egypt. But the mission remains the same — one exceptional cup at a time, connecting people through the love of great coffee.'
+        }
+      ];
+    %>
+
+    <div style="position:relative;padding-left:40px">
+      <!-- Vertical line -->
+      <div style="position:absolute;left:16px;top:0;bottom:0;
+                  width:2px;background:var(--cream-dark)"></div>
+
+      <% timeline.forEach((item, i) => { %>
+        <div style="position:relative;margin-bottom:48px">
+          <!-- Dot -->
+          <div style="position:absolute;left:-32px;top:6px;
+                      width:32px;height:32px;border-radius:50%;
+                      background:var(--caramel);
+                      display:flex;align-items:center;justify-content:center;
+                      font-size:1rem;z-index:1">
+            <%= item.emoji %>
+          </div>
+
+          <!-- Content -->
+          <div style="background:white;border-radius:16px;padding:28px;
+                      box-shadow:var(--shadow-sm)">
+            <div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+              <span style="background:var(--espresso);color:var(--cream);
+                           padding:4px 14px;border-radius:50px;
+                           font-size:.8rem;font-weight:700;
+                           font-family:var(--ff-display)">
+                <%= item.year %>
+              </span>
+              <h3 style="font-family:var(--ff-display);font-size:1.2rem;margin:0">
+                <%= item.title %>
+              </h3>
+            </div>
+            <p style="color:var(--warm-gray);line-height:1.8;margin:0;font-size:.95rem">
+              <%= item.text %>
+            </p>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Quote -->
+<section style="background:var(--cream-dark);padding:80px 0;text-align:center">
+  <div class="container" style="max-width:680px">
+    <div style="font-size:4rem;margin-bottom:24px;color:var(--caramel)">"</div>
+    <p style="font-family:var(--ff-display);font-size:1.6rem;font-style:italic;
+              line-height:1.5;margin-bottom:24px;color:var(--espresso)">
+      Coffee is not just what we sell — it's how we make people feel.
+      Every bag we ship carries a little piece of our heart.
+    </p>
+    <div style="display:flex;align-items:center;justify-content:center;gap:12px">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--espresso);
+                  display:flex;align-items:center;justify-content:center;font-size:1.5rem">
+        👩
+      </div>
+      <div style="text-align:left">
+        <div style="font-weight:700;font-size:.95rem">Farida Ahmed</div>
+        <div style="color:var(--warm-gray);font-size:.82rem">Founder, Farida Coffee</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--espresso);padding:80px 0;text-align:center">
+  <div class="container">
+    <h2 style="font-family:var(--ff-display);color:var(--cream);
+               font-size:2rem;margin-bottom:16px">
+      Be part of our story
+    </h2>
+    <p style="color:rgba(250,246,241,.65);margin-bottom:32px">
+      Every order you place helps us grow and support the farmers we love.
+    </p>
+    <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap">
+      <a href="/products" class="btn btn-primary">Shop Now</a>
+      <a href="/about" class="btn btn-outline">Learn More About Us</a>
+    </div>
+  </div>
+</section>

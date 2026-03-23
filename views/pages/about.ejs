@@ -1,0 +1,125 @@
+<!-- Hero -->
+<section style="background:var(--espresso);padding:80px 0;text-align:center">
+  <div class="container">
+    <p style="color:var(--caramel);font-size:.85rem;font-weight:700;
+              letter-spacing:.1em;text-transform:uppercase;margin-bottom:16px">
+      Who We Are
+    </p>
+    <h1 style="font-family:var(--ff-display);font-size:3rem;
+               color:var(--cream);margin-bottom:20px">
+      About Farida Coffee
+    </h1>
+    <p style="color:rgba(250,246,241,.65);font-size:1.1rem;
+              max-width:560px;margin:0 auto;line-height:1.8">
+      We are a specialty coffee company based in Cairo, passionate about
+      bringing the world's finest coffees to your cup.
+    </p>
+  </div>
+</section>
+
+<!-- Mission -->
+<section class="section">
+  <div class="container">
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center">
+      <div>
+        <p class="subtitle">Our Mission</p>
+        <h2 class="section-title">Coffee that connects people</h2>
+        <div class="section-line"></div>
+        <p style="color:var(--warm-gray);line-height:1.9;margin-bottom:20px">
+          At Farida Coffee, we believe that a great cup of coffee is more than
+          just a drink — it's a moment of connection, comfort, and joy. Our
+          mission is to source the finest single-origin beans from around the
+          world and deliver them fresh to your door.
+        </p>
+        <p style="color:var(--warm-gray);line-height:1.9">
+          We work directly with farmers in Ethiopia, Colombia, Kenya, and
+          Guatemala — building relationships that ensure fair prices for
+          growers and exceptional quality for you.
+        </p>
+      </div>
+      <div style="background:var(--cream-dark);border-radius:20px;
+                  aspect-ratio:1;display:flex;align-items:center;
+                  justify-content:center;font-size:8rem">
+        ☕
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Values -->
+<section class="section" style="background:var(--cream-dark)">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="subtitle">What We Stand For</p>
+      <h2 class="section-title">Our Values</h2>
+      <div class="section-line" style="margin:12px auto 0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px">
+      <% [
+        { icon:'🌍', title:'Ethical Sourcing',   text:'We pay fair prices to farmers and invest in sustainable farming practices.' },
+        { icon:'🔥', title:'Fresh Roasting',     text:'Every batch is roasted fresh and shipped within 48 hours of roasting.' },
+        { icon:'💯', title:'Quality First',      text:'We cup and taste every coffee before offering it to our customers.' },
+        { icon:'🤝', title:'Community',          text:'We are proud to be part of the Cairo coffee community and beyond.' },
+        { icon:'🌱', title:'Sustainability',     text:'We use eco-friendly packaging and offset our carbon footprint.' },
+        { icon:'❤️', title:'Customer Love',      text:'Every order is packed with care. Your satisfaction is our priority.' }
+      ].forEach(v => { %>
+        <div style="background:white;border-radius:16px;padding:28px;
+                    box-shadow:var(--shadow-sm);text-align:center">
+          <div style="font-size:2.5rem;margin-bottom:16px"><%= v.icon %></div>
+          <h3 style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:10px">
+            <%= v.title %>
+          </h3>
+          <p style="color:var(--warm-gray);font-size:.9rem;line-height:1.7;margin:0">
+            <%= v.text %>
+          </p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- Team -->
+<section class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:48px">
+      <p class="subtitle">The People Behind the Coffee</p>
+      <h2 class="section-title">Our Team</h2>
+      <div class="section-line" style="margin:12px auto 0"></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px">
+      <% [
+        { name:'Farida Ahmed',   role:'Founder & Head Roaster',  emoji:'👩‍🍳' },
+        { name:'Omar Hassan',    role:'Head of Sourcing',         emoji:'🌍' },
+        { name:'Sara Mahmoud',   role:'Customer Experience',      emoji:'💬' },
+        { name:'Ahmed Khaled',   role:'Logistics & Delivery',     emoji:'🚚' }
+      ].forEach(member => { %>
+        <div style="text-align:center">
+          <div style="width:100px;height:100px;border-radius:50%;
+                      background:var(--cream-dark);margin:0 auto 16px;
+                      display:flex;align-items:center;justify-content:center;
+                      font-size:3rem">
+            <%= member.emoji %>
+          </div>
+          <h3 style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:4px">
+            <%= member.name %>
+          </h3>
+          <p style="color:var(--warm-gray);font-size:.88rem"><%= member.role %></p>
+        </div>
+      <% }) %>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--espresso);padding:80px 0;text-align:center">
+  <div class="container">
+    <h2 style="font-family:var(--ff-display);color:var(--cream);
+               font-size:2rem;margin-bottom:16px">
+      Ready to taste the difference?
+    </h2>
+    <p style="color:rgba(250,246,241,.65);margin-bottom:32px;font-size:1rem">
+      Explore our collection of specialty coffees from around the world.
+    </p>
+    <a href="/products" class="btn btn-primary">Shop Our Coffee →</a>
+  </div>
+</section>

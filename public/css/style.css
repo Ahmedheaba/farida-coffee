@@ -1123,11 +1123,47 @@ body.dark .subtitle {
   color: var(--warm-gray);
 }
 /* Navbar in dark mode */
+/* ─── Dark Mode Navbar Menu ──────────────────────────────────────────────── */
 body.dark .navbar {
-  background: rgba(26, 18, 8, 0.95);
+  background: rgba(15, 8, 3, 0.95) !important;
   border-bottom-color: #3d2e1e;
 }
 
+body.dark .navbar-nav {
+  background: rgba(15, 8, 3, 0.99) !important;
+}
+
+body.dark .navbar-nav a {
+  color: #faf6f1 !important;
+  border-bottom-color: #3d2e1e !important;
+}
+
+body.dark .navbar-nav li {
+  background: transparent !important;
+}
+
+body.dark .navbar-brand {
+  color: #faf6f1 !important;
+}
+
+body.dark .search-input {
+  background: #241a0f !important;
+  border-color: #3d2e1e !important;
+  color: #faf6f1 !important;
+}
+
+body.dark .search-input::placeholder {
+  color: #8c7b6e !important;
+}
+
+body.dark .dark-toggle {
+  color: #faf6f1 !important;
+  border-color: #3d2e1e !important;
+}
+
+body.dark .hamburger span {
+  background: #faf6f1 !important;
+}
 /* Cards in dark mode */
 body.dark .product-card,
 body.dark .checkout-card,
@@ -1295,4 +1331,64 @@ body.dark div[style*="background:var(--cream);border-radius:10px"] {
 }
 body.dark div[style*="background:var(--cream);border-radius:10px"] div {
   color: #faf6f1 !important;
+}
+/* ─── Checkout Mobile Fixes ─────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  /* Payment method options */
+  .checkout-card label[style*="display:flex"] {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* Payment icons */
+  .checkout-card label span[style*="margin-left:auto"] {
+    margin-left: 0 !important;
+  }
+
+  /* Place order button */
+  #submit-btn {
+    font-size: 0.9rem !important;
+    padding: 14px 16px !important;
+  }
+
+  /* Checkout layout stacks on mobile */
+  .checkout-layout {
+    grid-template-columns: 1fr !important;
+    gap: 24px;
+  }
+
+  /* Order summary sticky — disable on mobile */
+  .checkout-card[style*="position:sticky"] {
+    position: relative !important;
+    top: auto !important;
+  }
+
+  /* Form row stays single column */
+  .form-row {
+    grid-template-columns: 1fr !important;
+    gap: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Navbar — hide text labels keep icons */
+  .nav-cart {
+    padding: 7px 12px !important;
+  }
+
+  /* Search bar on mobile — full width */
+  .search-input {
+    width: 140px !important;
+  }
+  .search-input:focus {
+    width: 180px !important;
+  }
+
+  /* Dark toggle — icon only on mobile */
+  .dark-toggle #dark-label {
+    display: none;
+  }
+  .dark-toggle {
+    padding: 6px 10px !important;
+  }
 }

@@ -1,3 +1,42 @@
+// ─── Mobile hamburger menu ────────────────────────────────────────────────
+function toggleMenu() {
+  const nav = document.getElementById("navbar-nav");
+  const hamburger = document.getElementById("hamburger");
+  if (!nav || !hamburger) return;
+  const isOpen = nav.classList.toggle("open");
+  hamburger.classList.toggle("open", isOpen);
+  document.body.style.overflow = isOpen ? "hidden" : "";
+}
+
+// Close menu when a link is clicked
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".navbar-nav a").forEach((link) => {
+    link.addEventListener("click", () => {
+      const nav = document.getElementById("navbar-nav");
+      const hamburger = document.getElementById("hamburger");
+      if (nav) nav.classList.remove("open");
+      if (hamburger) hamburger.classList.remove("open");
+      document.body.style.overflow = "";
+    });
+  });
+
+  // Close menu when clicking outside
+  document.addEventListener("click", (e) => {
+    const nav = document.getElementById("navbar-nav");
+    const hamburger = document.getElementById("hamburger");
+    if (
+      nav &&
+      hamburger &&
+      !nav.contains(e.target) &&
+      !hamburger.contains(e.target) &&
+      nav.classList.contains("open")
+    ) {
+      nav.classList.remove("open");
+      hamburger.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+  });
+});
 // Auto-dismiss flash messages after 4 seconds
 document.querySelectorAll(".flash").forEach((el) => {
   setTimeout(() => {
@@ -80,40 +119,7 @@ if (searchInput) {
     }
   });
 }
-// ─── Mobile hamburger menu ────────────────────────────────────────────────
-function toggleMenu() {
-  const nav = document.getElementById("navbar-nav");
-  const hamburger = document.getElementById("hamburger");
-  const isOpen = nav.classList.toggle("open");
-  hamburger.classList.toggle("open", isOpen);
-  document.body.style.overflow = isOpen ? "hidden" : "";
-}
 
-// Close menu when a link is clicked
-document.querySelectorAll(".navbar-nav a").forEach((link) => {
-  link.addEventListener("click", () => {
-    document.getElementById("navbar-nav").classList.remove("open");
-    document.getElementById("hamburger").classList.remove("open");
-    document.body.style.overflow = "";
-  });
-});
-
-// Close menu when clicking outside
-document.addEventListener("click", (e) => {
-  const nav = document.getElementById("navbar-nav");
-  const hamburger = document.getElementById("hamburger");
-  if (
-    nav &&
-    hamburger &&
-    !nav.contains(e.target) &&
-    !hamburger.contains(e.target) &&
-    nav.classList.contains("open")
-  ) {
-    nav.classList.remove("open");
-    hamburger.classList.remove("open");
-    document.body.style.overflow = "";
-  }
-});
 // ─── Dark Mode ────────────────────────────────────────────────────────────
 function toggleDark() {
   const isDark = document.body.classList.toggle("dark");

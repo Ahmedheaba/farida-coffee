@@ -117,7 +117,7 @@ app.use("/admin", require("./routes/admin"));
 app.use("/orders", require("./routes/orders"));
 app.use("/reviews", require("./routes/reviews"));
 app.use("/wishlist", require("./routes/wishlist"));
-
+app.use("/", require("./routes/pages"));
 // ─── 404 Handler ─────────────────────────────────────────────────────────
 app.use((req, res) => {
   res.status(404).render("404", { title: "Page Not Found" });
