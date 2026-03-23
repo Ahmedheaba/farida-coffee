@@ -1134,7 +1134,7 @@ body.dark .navbar-nav {
 }
 
 body.dark .navbar-nav a {
-  color: #faf6f1 !important;
+  /* color: #faf6f1 !important; */
   border-bottom-color: #3d2e1e !important;
 }
 
