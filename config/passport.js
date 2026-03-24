@@ -2,40 +2,35 @@ const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
 const User = require("../models/User");
 
-passport.use(
-  new GoogleStrategy(
-    {
-      clientID: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      callbackURL: "/auth/google/callback",
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      try {
-        // Check if user already exists
-        let user = await User.findOne({ email: profile.emails[0].value });
-
-        if (user) {
-          // User exists — just log them in
+// Only setup Google OAuth if credentials are provided
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
+  passport.use(
+    new GoogleStrategy(
+      {
+        clientID: process.env.GOOGLE_CLIENT_ID,
+        clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+        callbackURL: "/auth/google/callback",
+      },
+      async (accessToken, refreshToken, profile, done) => {
+        try {
+          let user = await User.findOne({ email: profile.emails[0].value });
+          if (user) return done(null, user);
+          user = await User.create({
+            name: profile.displayName,
+            email: profile.emails[0].value,
+            password: "google-oauth-" + profile.id,
+            googleId: profile.id,
+            avatar: profile.photos[0]?.value,
+            role: "customer",
+          });
           return done(null, user);
+        } catch (err) {
+          return done(err, null);
         }
-
-        // New user — create account automatically
-        user = await User.create({
-          name: profile.displayName,
-          email: profile.emails[0].value,
-          password: "google-oauth-" + profile.id, // placeholder password
-          googleId: profile.id,
-          avatar: profile.photos[0]?.value,
-          role: "customer",
-        });
-
-        return done(null, user);
-      } catch (err) {
-        return done(err, null);
-      }
-    },
-  ),
-);
+      },
+    ),
+  );
+}
 
 passport.serializeUser((user, done) => {
   done(null, user._id);

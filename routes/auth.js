@@ -69,21 +69,32 @@ router.get("/logout", (req, res) => {
   req.session.destroy();
   res.redirect("/");
 });
-// GET /auth/google — Redirect to Google
-router.get(
-  "/google",
-  passport.authenticate("google", { scope: ["profile", "email"] }),
-);
+// GET /auth/google
+router.get("/google", (req, res, next) => {
+  if (!process.env.GOOGLE_CLIENT_ID) {
+    req.flash("error", "Google login is not configured");
+    return res.redirect("/auth/login");
+  }
+  passport.authenticate("google", { scope: ["profile", "email"] })(
+    req,
+    res,
+    next,
+  );
+});
 
-// GET /auth/google/callback — Google redirects here
+// GET /auth/google/callback
 router.get(
   "/google/callback",
-  passport.authenticate("google", {
-    failureRedirect: "/auth/login",
-    failureFlash: true,
-  }),
+  (req, res, next) => {
+    if (!process.env.GOOGLE_CLIENT_ID) {
+      return res.redirect("/auth/login");
+    }
+    passport.authenticate("google", {
+      failureRedirect: "/auth/login",
+      failureFlash: true,
+    })(req, res, next);
+  },
   async (req, res) => {
-    // Save user info to session (same as normal login)
     req.session.userId = req.user._id;
     req.session.userName = req.user.name;
     req.session.isAdmin = req.user.role === "admin";
@@ -91,5 +102,4 @@ router.get(
     res.redirect("/");
   },
 );
-
 module.exports = router;
