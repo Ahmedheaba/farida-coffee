@@ -117,12 +117,33 @@ async function sendOrderNotification(order) {
 
 // ─── Email to customer when order placed ─────────────────────────────────
 async function sendOrderConfirmationEmail(order) {
+  console.log(
+    "📧 Attempting to send confirmation email to:",
+    order.customer.email,
+  );
+
   if (!process.env.EMAIL_USER || !process.env.EMAIL_PASS) {
     console.log("⚠️ Email not configured — skipping confirmation");
     return;
   }
+    try {
+    const transporter = createTransporter();
+    console.log('📧 Transporter created, sending...');
+    
+    await transporter.sendMail({
+      from:    `"${process.env.STORE_NAME}" <${process.env.EMAIL_USER}>`,
+      to:      order.customer.email,
+      subject: `✅ Order Confirmed — ${order.orderNumber}`,
+      // ... rest of email
+    });
+    
+    console.log('📧 ✅ Confirmation email sent successfully to:', order.customer.email);
+  } catch (err) {
+    console.error('📧 ❌ Email sending FAILED:', err.message);
+    console.error('📧 Full error:', err);
+    }
+  }
 
-  const transporter = createTransporter();
 
   const itemsList = order.items
     .map(

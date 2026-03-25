@@ -58,6 +58,21 @@ router.post("/", async (req, res, next) => {
       paymentMethod: "cash-on-delivery",
       notes,
     });
+    console.log("Order created:", order.orderNumber);
+    console.log("Customer email:", order.customer.email);
+
+    // Send emails
+    sendOrderNotification(order)
+      .then(() => console.log("✅ Owner notification sent"))
+      .catch((err) =>
+        console.error("❌ Owner notification failed:", err.message),
+      );
+
+    sendOrderConfirmationEmail(order)
+      .then(() => console.log("✅ Customer confirmation sent"))
+      .catch((err) =>
+        console.error("❌ Customer confirmation failed:", err.message),
+      );
 
     // Send emails in background
     sendOrderNotification(order).catch((err) =>
