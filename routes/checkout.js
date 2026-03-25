@@ -41,8 +41,8 @@ router.post("/", async (req, res, next) => {
     const subtotal = cartTotal(cart);
 
     const order = await Order.create({
-      user: req.session.userId || null, // null for guests
-      isGuest: !req.session.userId, // flag guest orders
+      user: req.session.userId || null,
+      isGuest: !req.session.userId,
       customer: { name, email, phone },
       shippingAddress: { street, city, zip },
       items: cart.map((item) => ({
@@ -58,45 +58,26 @@ router.post("/", async (req, res, next) => {
       paymentMethod: "cash-on-delivery",
       notes,
     });
-    console.log("Order created:", order.orderNumber);
-    console.log("Customer email:", order.customer.email);
 
-    // Send emails
+    console.log("✅ Order created:", order.orderNumber);
+    console.log("📧 Customer email:", order.customer.email);
+
+    // ✅ Send both emails in background
     sendOrderNotification(order)
-      .then(() => console.log("✅ Owner notification sent"))
-      .catch((err) =>
-        console.error("❌ Owner notification failed:", err.message),
-      );
+      .then(() => console.log("✅ Owner email sent"))
+      .catch((err) => console.error("❌ Owner email failed:", err.message));
 
     sendOrderConfirmationEmail(order)
-      .then(() => console.log("✅ Customer confirmation sent"))
-      .catch((err) =>
-        console.error("❌ Customer confirmation failed:", err.message),
-      );
+      .then(() => console.log("✅ Customer email sent"))
+      .catch((err) => console.error("❌ Customer email failed:", err.message));
 
-    // Send emails in background
-    sendOrderNotification(order).catch((err) =>
-      console.error("Owner email failed:", err.message),
-    );
-    sendOrderConfirmationEmail(order).catch((err) =>
-      console.error("Customer email failed:", err.message),
-    );
-
-    req.session.cart = [];
-
-    // Send owner notification
-    // Send in background — don't wait for it
-    sendOrderNotification(order).catch((err) =>
-      console.error("Email failed:", err.message),
-    );
     req.session.cart = [];
     req.flash("success", `Order ${order.orderNumber} placed successfully!`);
     res.redirect(`/orders/${order._id}/confirmation`);
   } catch (err) {
     next(err);
   }
-});
-// POST /checkout/stripe - Create Stripe payment intent
+}); // POST /checkout/stripe - Create Stripe payment intent
 router.post("/stripe/intent", async (req, res) => {
   try {
     const cart = req.session.cart || [];
