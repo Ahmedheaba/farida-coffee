@@ -58,12 +58,10 @@ router.post("/", async (req, res, next) => {
     });
 
     // Send owner notification
-    try {
-      await sendOrderNotification(order);
-    } catch (emailErr) {
-      console.error("Email failed:", emailErr.message);
-    }
-
+    // Send in background — don't wait for it
+    sendOrderNotification(order).catch((err) =>
+      console.error("Email failed:", err.message),
+    );
     req.session.cart = [];
     req.flash("success", `Order ${order.orderNumber} placed successfully!`);
     res.redirect(`/orders/${order._id}/confirmation`);

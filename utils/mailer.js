@@ -6,8 +6,14 @@ const transporter = nodemailer.createTransport({
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+  pool: true,
+  maxConnections: 1,
+  rateDelta: 20000,
+  rateLimit: 5,
+  connectionTimeout: 5000, // ✅ 5 second timeout
+  greetingTimeout: 5000,
+  socketTimeout: 5000,
 });
-
 // Send email to store owner when new order is placed
 async function sendOrderNotification(order) {
   const itemsList = order.items

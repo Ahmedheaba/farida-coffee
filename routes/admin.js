@@ -185,12 +185,10 @@ router.put("/orders/:id/status", async (req, res, next) => {
     );
 
     // 📧 Send email to customer
-    try {
-      await sendStatusUpdateEmail(order);
-    } catch (emailErr) {
-      console.error("Status email failed:", emailErr.message);
-    }
-
+    // Send in background — don't wait for it
+    sendStatusUpdateEmail(order).catch((err) =>
+      console.error("Status email failed:", err.message),
+    );
     req.flash("success", `Order status updated & customer notified by email`);
     res.redirect("/admin/orders");
   } catch (err) {
