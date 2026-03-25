@@ -1,3 +1,7 @@
+const {
+  sendOrderNotification,
+  sendOrderConfirmationEmail,
+} = require("../utils/mailer");
 const { sendOrderNotification } = require("../utils/mailer");
 const express = require("express");
 const router = express.Router();
@@ -56,6 +60,16 @@ router.post("/", async (req, res, next) => {
       paymentMethod: "cash-on-delivery",
       notes,
     });
+
+    // Send emails in background
+    sendOrderNotification(order).catch((err) =>
+      console.error("Owner email failed:", err.message),
+    );
+    sendOrderConfirmationEmail(order).catch((err) =>
+      console.error("Customer email failed:", err.message),
+    );
+
+    req.session.cart = [];
 
     // Send owner notification
     // Send in background — don't wait for it
