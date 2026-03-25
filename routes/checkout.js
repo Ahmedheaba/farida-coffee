@@ -1,13 +1,11 @@
-const {
-  sendOrderNotification,
-  sendOrderConfirmationEmail,
-} = require("../utils/mailer");
-const { sendOrderNotification } = require("../utils/mailer");
 const express = require("express");
 const router = express.Router();
 const Order = require("../models/Order");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
-
+const {
+  sendOrderNotification,
+  sendOrderConfirmationEmail,
+} = require("../utils/mailer");
 const SHIPPING_COST = 50; // EGP
 
 function cartTotal(cart) {
