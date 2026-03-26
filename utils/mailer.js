@@ -9,17 +9,18 @@ console.log("Mailer config:", {
 // ─── Create transporter ───────────────────────────────────────────────────
 function createTransporter() {
   return nodemailer.createTransport({
-    service: "gmail",
+    host: process.env.EMAIL_HOST || "smtp-relay.brevo.com",
+    port: Number(process.env.EMAIL_PORT) || 587,
+    secure: false,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    connectionTimeout: 10000,
-    greetingTimeout: 10000,
-    socketTimeout: 10000,
+    connectionTimeout: 15000,
+    greetingTimeout: 15000,
+    socketTimeout: 15000,
   });
 }
-
 // ─── Email to owner when new order placed ─────────────────────────────────
 async function sendOrderNotification(order) {
   console.log("📧 Sending owner notification for:", order.orderNumber);
