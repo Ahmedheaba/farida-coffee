@@ -650,7 +650,7 @@ select.form-control {
   box-shadow: var(--shadow-sm);
 }
 .table th {
-  background: var(--espresso);
+  /* background: var(--espresso); */
   color: var(--cream);
   padding: 14px 16px;
   text-align: left;
