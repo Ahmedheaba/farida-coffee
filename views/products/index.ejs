@@ -71,7 +71,14 @@
               </div>
             </div>
             <div class="product-card-footer">
-  <div class="product-price">EGP <%= product.price.toFixed(0) %></div>
+  <div class="product-price">
+    <% if (product.compareAtPrice && product.compareAtPrice > product.price) { %>
+      <del style="color:var(--warm-gray);font-size:0.85em;margin-right:6px">EGP <%= product.compareAtPrice.toFixed(0) %></del>
+      <span style="color:var(--danger)">EGP <%= product.price.toFixed(0) %></span>
+    <% } else { %>
+      EGP <%= product.price.toFixed(0) %>
+    <% } %>
+  </div>
   <div style="display:flex;gap:8px;align-items:center">
     <!-- Wishlist heart button -->
     <% if (currentUser) { %>

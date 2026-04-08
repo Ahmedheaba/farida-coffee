@@ -86,20 +86,14 @@
                 </div>
                 <span style="margin-left:auto;font-size:1.3rem">💵</span>
               </label>
-              <label style="display:flex;align-items:center;gap:12px;background:white;border:1.5px solid var(--light-gray);border-radius:10px;padding:16px;cursor:pointer" id="stripe-option">
-                <input type="radio" name="paymentMethod" value="stripe" style="accent-color:var(--caramel);width:18px;height:18px" onchange="toggleStripe(this)">
+              <label style="display:flex;align-items:center;gap:12px;background:white;border:1.5px solid var(--light-gray);border-radius:10px;padding:16px;cursor:pointer" id="instapay-option">
+                <input type="radio" name="paymentMethod" value="instapay" style="accent-color:var(--caramel);width:18px;height:18px">
                 <div>
-                  <div style="font-weight:700;font-size:.95rem">Credit / Debit Card</div>
-                  <div style="font-size:.82rem;color:var(--warm-gray)">Secure payment via Stripe</div>
+                  <div style="font-weight:700;font-size:.95rem">Instapay</div>
+                  <div style="font-size:.82rem;color:var(--warm-gray);line-height:1.4">You'll receive a payment link on your phone number. Once the payment is confirmed, we'll proceed with your order.</div>
                 </div>
-                <span style="margin-left:auto;font-size:1.3rem">💳</span>
+                <span style="margin-left:auto;font-size:1.3rem">📱</span>
               </label>
-            </div>
-
-            <!-- Stripe Card Element (hidden unless card selected) -->
-            <div id="stripe-container" style="display:none;margin-bottom:24px">
-              <div id="card-element" style="background:white;border:1.5px solid var(--light-gray);border-radius:10px;padding:16px"></div>
-              <div id="card-errors" style="color:var(--danger);font-size:.85rem;margin-top:8px"></div>
             </div>
 
             <button type="submit" class="btn btn-primary btn-block" style="font-size:1rem;padding:16px" id="submit-btn">
@@ -138,56 +132,10 @@
   </div>
 </section>
 
-<script src="https://js.stripe.com/v3/"></script>
 <script>
-  const stripe = Stripe('<%= stripePublicKey %>');
-  const elements = stripe.elements();
-  const card = elements.create('card', {
-    style: { base: { fontFamily: 'Lato, sans-serif', fontSize: '16px', color: '#2C1A0E' } }
-  });
-  card.mount('#card-element');
-
-  card.on('change', e => {
-    document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
-  });
-
-  function toggleStripe(radio) {
-    document.getElementById('stripe-container').style.display = radio.checked ? 'block' : 'none';
-  }
-
-  document.getElementById('checkout-form').addEventListener('submit', async (e) => {
-    const paymentMethod = document.querySelector('input[name=paymentMethod]:checked').value;
-    if (paymentMethod !== 'stripe') return; // Let form submit normally for cash
-
-    e.preventDefault();
+  document.getElementById('checkout-form').addEventListener('submit', (e) => {
     const btn = document.getElementById('submit-btn');
-    btn.disabled = true;
     btn.textContent = 'Processing...';
-
-    // Get payment intent from server
-    const intentRes = await fetch('/checkout/stripe/intent', { method: 'POST' });
-    const { clientSecret } = await intentRes.json();
-
-    const { paymentIntent, error } = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: { card }
-    });
-
-    if (error) {
-      document.getElementById('card-errors').textContent = error.message;
-      btn.disabled = false;
-      btn.textContent = 'Place Order';
-    } else {
-      // Confirm order on server
-      const formData = new FormData(e.target);
-      const body = Object.fromEntries(formData);
-      body.paymentIntentId = paymentIntent.id;
-      const res = await fetch('/checkout/stripe/confirm', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(body)
-      });
-      const { orderId } = await res.json();
-      window.location.href = `/orders/${orderId}/confirmation`;
-    }
+    btn.disabled = true;
   });
 </script>

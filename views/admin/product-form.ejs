@@ -21,16 +21,22 @@
         <form action="<%= product ? '/admin/products/' + product._id + '?_method=PUT' : '/admin/products' %>"
               method="POST" enctype="multipart/form-data">
 
+          <div class="form-group">
+            <label class="form-label">Product Name *</label>
+            <input type="text" name="name" class="form-control" required
+                   value="<%= product ? product.name : '' %>" placeholder="e.g. Ethiopian Yirgacheffe">
+          </div>
+
           <div class="form-row">
             <div class="form-group">
-              <label class="form-label">Product Name *</label>
-              <input type="text" name="name" class="form-control" required
-                     value="<%= product ? product.name : '' %>" placeholder="e.g. Ethiopian Yirgacheffe">
-            </div>
-            <div class="form-group">
-              <label class="form-label">Price (EGP) *</label>
+              <label class="form-label">Selling Price (EGP) *</label>
               <input type="number" name="price" class="form-control" required min="0" step="0.01"
                      value="<%= product ? product.price : '' %>" placeholder="150">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Original Price (Crossed Out) optional</label>
+              <input type="number" name="compareAtPrice" class="form-control" min="0" step="0.01"
+                     value="<%= product && product.compareAtPrice ? product.compareAtPrice : '' %>" placeholder="e.g. 200">
             </div>
           </div>
 

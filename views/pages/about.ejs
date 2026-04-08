@@ -55,17 +55,18 @@
       <div class="section-line" style="margin:12px auto 0"></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:28px">
-      <% [
-        { icon:'🌍', title:'Ethical Sourcing',   text:'We pay fair prices to farmers and invest in sustainable farming practices.' },
-        { icon:'🔥', title:'Fresh Roasting',     text:'Every batch is roasted fresh and shipped within 48 hours of roasting.' },
-        { icon:'💯', title:'Quality First',      text:'We cup and taste every coffee before offering it to our customers.' },
-        { icon:'🤝', title:'Community',          text:'We are proud to be part of the Cairo coffee community and beyond.' },
-        { icon:'🌱', title:'Sustainability',     text:'We use eco-friendly packaging and offset our carbon footprint.' },
-        { icon:'❤️', title:'Customer Love',      text:'Every order is packed with care. Your satisfaction is our priority.' }
-      ].forEach(v => { %>
+      <% [ { icon:'🌍', title:'Ethical Sourcing', text:'We pay fair prices to farmers and invest in sustainable farming
+        practices.' }, { icon:'🔥', title:'Fresh Roasting', text:'Every batch is roasted fresh and shipped within 48
+        hours of roasting.' }, { icon:'💯', title:'Quality First', text:'We cup and taste every coffee before offering
+        it to our customers.' }, { icon:'🤝', title:'Community', text:'We are proud to be part of the Cairo coffee
+        community and beyond.' }, { icon:'🌱', title:'Sustainability', text:'We use eco-friendly packaging and offset
+        our carbon footprint.' }, { icon:'❤️', title:'Customer Love', text:'Every order is packed with care. Your
+        satisfaction is our priority.' } ].forEach(v=> { %>
         <div style="background:white;border-radius:16px;padding:28px;
                     box-shadow:var(--shadow-sm);text-align:center">
-          <div style="font-size:2.5rem;margin-bottom:16px"><%= v.icon %></div>
+          <div style="font-size:2.5rem;margin-bottom:16px">
+            <%= v.icon %>
+          </div>
           <h3 style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:10px">
             <%= v.title %>
           </h3>
@@ -73,7 +74,7 @@
             <%= v.text %>
           </p>
         </div>
-      <% }) %>
+        <% }) %>
     </div>
   </div>
 </section>
@@ -87,12 +88,9 @@
       <div class="section-line" style="margin:12px auto 0"></div>
     </div>
     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:28px">
-      <% [
-        { name:'Farida Ahmed',   role:'Founder & Head Roaster',  emoji:'👩‍🍳' },
-        { name:'Omar Hassan',    role:'Head of Sourcing',         emoji:'🌍' },
-        { name:'Sara Mahmoud',   role:'Customer Experience',      emoji:'💬' },
-        { name:'Ahmed Khaled',   role:'Logistics & Delivery',     emoji:'🚚' }
-      ].forEach(member => { %>
+      <% [ { name:'Farida Ahmed', role:'Founder & Head Roaster', emoji:'👩‍🍳' }, { name:'Omar Hassan', role:'Head of
+        Sourcing', emoji:'🌍' }, { name:'Sara Mahmoud', role:'Customer Experience', emoji:'💬' }, { name:'Ahmed Khaled',
+        role:'Logistics & Delivery', emoji:'🚚' } ].forEach(member=> { %>
         <div style="text-align:center">
           <div style="width:100px;height:100px;border-radius:50%;
                       background:var(--cream-dark);margin:0 auto 16px;
@@ -103,9 +101,11 @@
           <h3 style="font-family:var(--ff-display);font-size:1.1rem;margin-bottom:4px">
             <%= member.name %>
           </h3>
-          <p style="color:var(--warm-gray);font-size:.88rem"><%= member.role %></p>
+          <p style="color:var(--warm-gray);font-size:.88rem">
+            <%= member.role %>
+          </p>
         </div>
-      <% }) %>
+        <% }) %>
     </div>
   </div>
 </section>

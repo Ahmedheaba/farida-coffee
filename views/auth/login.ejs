@@ -1,126 +1,113 @@
-<section
-  style="
-    min-height: 80vh;
+<style>
+  .auth-split {
+    display: flex;
+    min-height: calc(100vh - 68px); /* minus navbar */
+    background: var(--cream);
+  }
+  .auth-form-side {
+    flex: 1;
     display: flex;
     align-items: center;
-    background: var(--cream);
-  "
->
-  <div class="container" style="max-width: 440px">
-    <div style="text-align: center; margin-bottom: 36px">
-      <div
-        style="
-          font-family: var(--ff-display);
-          font-size: 1.8rem;
-          font-weight: 700;
-          margin-bottom: 8px;
-        "
-      >
-        Farida<span style="color: var(--caramel)">.</span>Coffee
-      </div>
-      <h1 style="font-size: 1.5rem">Welcome back</h1>
-      <p style="color: var(--warm-gray)">Sign in to your account</p>
-    </div>
-    <!-- Google Login Button -->
-    <a
-      href="/auth/google"
-      style="
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 12px;
-        background: white;
-        color: #3c4043;
-        border: 1.5px solid var(--light-gray);
-        border-radius: 50px;
-        padding: 12px 24px;
-        font-weight: 700;
-        font-size: 0.95rem;
-        text-decoration: none;
-        margin-bottom: 20px;
-        transition: box-shadow 0.2s;
-      "
-      onmouseover="this.style.boxShadow = '0 2px 8px rgba(0,0,0,.15)'"
-      onmouseout="this.style.boxShadow = 'none'"
-    >
-      <svg width="20" height="20" viewBox="0 0 48 48">
-        <path
-          fill="#EA4335"
-          d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"
-        />
-        <path
-          fill="#4285F4"
-          d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"
-        />
-        <path
-          fill="#FBBC05"
-          d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"
-        />
-        <path
-          fill="#34A853"
-          d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"
-        />
-      </svg>
-      Continue with Google
-    </a>
+    justify-content: center;
+    padding: 40px 24px;
+  }
+  .auth-image-side {
+    flex: 1;
+    display: none;
+    position: relative;
+    background: url('https://images.unsplash.com/photo-1497935586351-b67a49e012bf?w=1200&q=80') center/cover no-repeat;
+  }
+  .auth-image-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(to top, rgba(10, 10, 10, 0.8), rgba(44, 26, 14, 0.2));
+  }
+  .auth-image-text {
+    position: absolute;
+    bottom: 60px;
+    left: 60px;
+    right: 60px;
+    color: white;
+  }
+  @media (min-width: 900px) {
+    .auth-image-side {
+      display: block;
+    }
+  }
+</style>
 
-    <!-- Divider -->
-    <div
-      style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px"
-    >
-      <div style="flex: 1; height: 1px; background: var(--light-gray)"></div>
-      <span style="font-size: 0.82rem; color: var(--warm-gray)"
-        >or sign in with email</span
-      >
-      <div style="flex: 1; height: 1px; background: var(--light-gray)"></div>
-    </div>
-    <div class="checkout-card">
-      <form action="/auth/login" method="POST">
-        <input
-          type="hidden"
-          name="returnTo"
-          value="<%= locals.returnTo || '/' %>"
-        />
-        <div class="form-group">
-          <label class="form-label">Email Address</label>
-          <input
-            type="email"
-            name="email"
-            class="form-control"
-            required
-            placeholder="you@example.com"
-            autofocus
-          />
-        </div>
-        <div class="form-group">
-          <label class="form-label">Password</label>
-          <input
-            type="password"
-            name="password"
-            class="form-control"
-            required
-            placeholder="••••••••"
-          />
-        </div>
-        <button
-          type="submit"
-          class="btn btn-primary btn-block"
-          style="margin-top: 8px"
-        >
-          Sign In
-        </button>
-      </form>
-      <p
+<section class="auth-split">
+  <div class="auth-form-side">
+    <div style="width: 100%; max-width: 440px" class="reveal">
+      <div style="margin-bottom: 40px">
+        <h1 style="font-size: 2.2rem; margin-bottom: 8px">Welcome back</h1>
+        <p style="color: var(--warm-gray); font-size: 1.05rem">Sign in to your Farida Coffee account</p>
+      </div>
+
+      <!-- Google Login Button -->
+      <a
+        href="/auth/google"
         style="
-          text-align: center;
-          margin-top: 20px;
-          font-size: 0.9rem;
-          color: var(--warm-gray);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          gap: 12px;
+          background: white;
+          color: #3c4043;
+          border: 1.5px solid var(--light-gray);
+          border-radius: var(--radius);
+          padding: 14px 24px;
+          font-weight: 700;
+          font-size: 0.95rem;
+          text-decoration: none;
+          margin-bottom: 24px;
+          transition: all 0.3s ease;
         "
+        onmouseover="this.style.boxShadow = '0 4px 12px rgba(0,0,0,.08)'; this.style.transform='translateY(-2px)'"
+        onmouseout="this.style.boxShadow = 'none'; this.style.transform='none'"
       >
-        New here?
-        <a href="/auth/register" style="font-weight: 700">Create an account</a>
-      </p>
+        <svg width="20" height="20" viewBox="0 0 48 48">
+          <path fill="#EA4335" d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5z"/>
+          <path fill="#4285F4" d="M46.98 24.55c0-1.57-.15-3.09-.38-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.78 7.18l7.73 6c4.51-4.18 7.09-10.36 7.09-17.65z"/>
+          <path fill="#FBBC05" d="M10.53 28.59c-.48-1.45-.76-2.99-.76-4.59s.27-3.14.76-4.59l-7.98-6.19C.92 16.46 0 20.12 0 24c0 3.88.92 7.54 2.56 10.78l7.97-6.19z"/>
+          <path fill="#34A853" d="M24 48c6.48 0 11.93-2.13 15.89-5.81l-7.73-6c-2.18 1.48-4.97 2.31-8.16 2.31-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 42.62 14.62 48 24 48z"/>
+        </svg>
+        Continue with Google
+      </a>
+
+      <!-- Divider -->
+      <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 24px">
+        <div style="flex: 1; height: 1px; background: var(--light-gray)"></div>
+        <span style="font-size: 0.85rem; color: var(--warm-gray); font-weight:700; text-transform:uppercase; letter-spacing:0.05em">or sign in with email</span>
+        <div style="flex: 1; height: 1px; background: var(--light-gray)"></div>
+      </div>
+
+      <div>
+        <form action="/auth/login" method="POST">
+          <input type="hidden" name="returnTo" value="<%= locals.returnTo || '/' %>" />
+          <div class="form-group">
+            <label class="form-label">Email Address</label>
+            <input type="email" name="email" class="form-control" required placeholder="you@example.com" autofocus />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control" required placeholder="••••••••" />
+          </div>
+          <button type="submit" class="btn btn-primary btn-block" style="margin-top: 12px; padding: 14px">
+            Sign In
+          </button>
+        </form>
+        <p style="text-align: center; margin-top: 32px; font-size: 0.95rem; color: var(--warm-gray);">
+          New here? <a href="/auth/register" style="font-weight: 700; color: var(--caramel)">Create an account</a>
+        </p>
+      </div>
+    </div>
+  </div>
+  <div class="auth-image-side reveal">
+    <div class="auth-image-overlay"></div>
+    <div class="auth-image-text">
+      <h2 style="font-family: var(--ff-display); font-size: 3rem; margin-bottom: 12px; line-height: 1.1">The Perfect Roast,<br>Every Time.</h2>
+      <p style="font-size: 1.1rem; opacity: 0.85; max-width: 400px">Experience specialty coffee beans sourced from the world's most renowned farms.</p>
     </div>
   </div>
 </section>

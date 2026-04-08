@@ -8,10 +8,9 @@ console.log("Mailer config:", {
 
 // ─── Create transporter ───────────────────────────────────────────────────
 function createTransporter() {
-  return nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || "smtp-relay.brevo.com",
-    port: Number(process.env.EMAIL_PORT) || 587,
-    secure: false,
+  const isGmail = process.env.EMAIL_USER && process.env.EMAIL_USER.includes('@gmail.com');
+  
+  const config = {
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
@@ -19,7 +18,21 @@ function createTransporter() {
     connectionTimeout: 15000,
     greetingTimeout: 15000,
     socketTimeout: 15000,
-  });
+  };
+
+  if (process.env.EMAIL_HOST) {
+    config.host = process.env.EMAIL_HOST;
+    config.port = Number(process.env.EMAIL_PORT) || 587;
+    config.secure = config.port === 465;
+  } else if (isGmail) {
+    config.service = 'gmail';
+  } else {
+    config.host = "smtp-relay.brevo.com";
+    config.port = 587;
+    config.secure = false;
+  }
+
+  return nodemailer.createTransport(config);
 }
 // ─── Email to owner when new order placed ─────────────────────────────────
 async function sendOrderNotification(order) {

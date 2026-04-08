@@ -55,7 +55,12 @@
           </div>
           <div class="product-card-footer">
             <div class="product-price">
-              EGP <%= product.price.toFixed(0) %>
+              <% if (product.compareAtPrice && product.compareAtPrice > product.price) { %>
+                <del style="color:var(--warm-gray);font-size:0.85em;margin-right:6px">EGP <%= product.compareAtPrice.toFixed(0) %></del>
+                <span style="color:var(--danger)">EGP <%= product.price.toFixed(0) %></span>
+              <% } else { %>
+                EGP <%= product.price.toFixed(0) %>
+              <% } %>
               <span class="currency">/ <%= product.weight || '250g' %></span>
             </div>
             <form action="/cart/add" method="POST">
@@ -73,22 +78,46 @@
   </div>
 </section>
 
-<!-- Why Farida -->
-<section class="section" style="background:var(--espresso);color:var(--cream)">
+<!-- Find Your Perfect Roast Interactive Banner -->
+<section class="section reveal" style="background:#0a0a0a;color:#faf6f1;text-align:center;">
   <div class="container">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:40px;text-align:center">
-      <% [
-        { icon: '🌍', title: 'Single Origin', text: 'Direct relationships with farms in Ethiopia, Colombia, Kenya & more.' },
-        { icon: '🔥', title: 'Fresh Roasted', text: 'Roasted in small batches weekly. Never sitting in a warehouse.' },
-        { icon: '🚚', title: 'Fast Delivery', text: 'Free delivery anywhere in Cairo. Egypt-wide within 3-5 days.' },
-        { icon: '💯', title: '100% Arabica', text: 'We only source the finest Arabica beans. Quality guaranteed.' }
-      ].forEach(f => { %>
-        <div>
-          <div style="font-size:2.5rem;margin-bottom:16px"><%= f.icon %></div>
-          <h3 style="color:var(--cream);font-size:1.1rem;margin-bottom:10px"><%= f.title %></h3>
-          <p style="color:rgba(250,246,241,.6);font-size:.9rem"><%= f.text %></p>
-        </div>
-      <% }) %>
+    <h2 style="font-family:var(--ff-display);font-size:2.8rem;margin-bottom:16px;color:#faf6f1;">Not sure where to start?</h2>
+    <p style="font-size:1.1rem;color:rgba(250,246,241,0.8);max-width:600px;margin:0 auto 40px;">
+      How do you brew your coffee at home? Choose your method below and we'll recommend the perfect beans for you.
+    </p>
+
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:24px;max-width:900px;margin:0 auto;">
+      
+      <!-- Espresso -->
+      <a href="/products?category=espresso" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px 20px;text-decoration:none;transition:all 0.3s ease;display:block;" 
+         onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.transform='translateY(-5px)';this.style.borderColor='var(--caramel)';"
+         onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.08)';">
+        <div style="font-size:3.5rem;margin-bottom:16px;">☕</div>
+        <h3 style="color:#faf6f1;margin-bottom:8px;font-size:1.4rem;">Espresso Machine</h3>
+        <p style="color:rgba(250,246,241,0.6);font-size:0.9rem;margin:0;">Darker roasts, rich crema, bold chocolate & nutty notes.</p>
+        <div style="color:var(--caramel);font-weight:700;margin-top:20px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;">Show Beans →</div>
+      </a>
+
+      <!-- Filter / Pour Over -->
+      <a href="/products?category=filter" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px 20px;text-decoration:none;transition:all 0.3s ease;display:block;"
+         onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.transform='translateY(-5px)';this.style.borderColor='var(--caramel)';"
+         onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.08)';">
+        <div style="font-size:3.5rem;margin-bottom:16px;">⚗️</div>
+        <h3 style="color:#faf6f1;margin-bottom:8px;font-size:1.4rem;">Filter / Pour-Over</h3>
+        <p style="color:rgba(250,246,241,0.6);font-size:0.9rem;margin:0;">Lighter roasts, bright acidity, fruity & floral profiles.</p>
+        <div style="color:var(--caramel);font-weight:700;margin-top:20px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;">Show Beans →</div>
+      </a>
+
+      <!-- Cold Brew -->
+      <a href="/products?category=cold-brew" style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:40px 20px;text-decoration:none;transition:all 0.3s ease;display:block;"
+         onmouseover="this.style.background='rgba(255,255,255,0.08)';this.style.transform='translateY(-5px)';this.style.borderColor='var(--caramel)';"
+         onmouseout="this.style.background='rgba(255,255,255,0.04)';this.style.transform='none';this.style.borderColor='rgba(255,255,255,0.08)';">
+        <div style="font-size:3.5rem;margin-bottom:16px;">🧊</div>
+        <h3 style="color:#faf6f1;margin-bottom:8px;font-size:1.4rem;">Cold Brew</h3>
+        <p style="color:rgba(250,246,241,0.6);font-size:0.9rem;margin:0;">Smooth, low-acidity blends perfected for steep brewing.</p>
+        <div style="color:var(--caramel);font-weight:700;margin-top:20px;font-size:0.85rem;text-transform:uppercase;letter-spacing:0.1em;">Show Beans →</div>
+      </a>
+
     </div>
   </div>
 </section>

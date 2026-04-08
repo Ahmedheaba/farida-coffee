@@ -176,6 +176,30 @@
   </div>
 </footer>
 
+<!-- ─── Animations ────────────────────────────────────────────── -->
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Add reveal class to main animated elements
+    const elementsToReveal = document.querySelectorAll('.section, .product-card, .footer-grid > div');
+    elementsToReveal.forEach(el => el.classList.add('reveal'));
+    
+    const revealObserver = new IntersectionObserver((entries, observer) => {
+      entries.forEach((entry, index) => {
+        if (entry.isIntersecting) {
+          // Staggered delay for elements appearing together
+          setTimeout(() => {
+            entry.target.classList.add('active');
+          }, index * 50);
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+    
+    // Crucial fix: Observe ALL .reveal elements so the login page doesn't stay invisible!
+    const allReveals = document.querySelectorAll('.reveal');
+    allReveals.forEach(el => revealObserver.observe(el));
+  });
+</script>
 <script src="/js/main.js"></script>
 </body>
 </html>

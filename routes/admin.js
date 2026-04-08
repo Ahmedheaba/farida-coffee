@@ -72,6 +72,47 @@ router.get("/products/new", (req, res) => {
   res.render("admin/product-form", { title: "Add Product", product: null });
 });
 
+router.post("/products/bulk-sale", async (req, res, next) => {
+  try {
+    const discountPercentage = Number(req.body.discountPercentage);
+    if (!discountPercentage || discountPercentage < 1 || discountPercentage > 99) {
+      req.flash("error", "Invalid discount percentage");
+      return res.redirect("/admin/products");
+    }
+
+    const products = await Product.find({});
+    for (const p of products) {
+      const originalPrice = p.compareAtPrice || p.price;
+      const newPrice = Math.round(originalPrice * (1 - discountPercentage / 100));
+      
+      p.compareAtPrice = originalPrice;
+      p.price = newPrice;
+      await p.save();
+    }
+
+    req.flash("success", `Global ${discountPercentage}% sale applied to all products!`);
+    res.redirect("/admin/products");
+  } catch (err) {
+    next(err);
+  }
+});
+
+router.post("/products/bulk-sale-reset", async (req, res, next) => {
+  try {
+    const products = await Product.find({ compareAtPrice: { $ne: null } });
+    for (const p of products) {
+      p.price = p.compareAtPrice;
+      p.compareAtPrice = null;
+      await p.save();
+    }
+    
+    req.flash("success", "All global sales have been reset to original prices.");
+    res.redirect("/admin/products");
+  } catch (err) {
+    next(err);
+  }
+});
+
 router.post(
   "/products",
   upload.fields([
@@ -90,6 +131,9 @@ router.post(
         data.images = req.files["images"].map(
           (f) => "/images/products/" + f.filename,
         );
+      }
+      if (!data.compareAtPrice) {
+        data.compareAtPrice = null;
       }
       data.featured = data.featured === "on";
       await Product.create(data);
@@ -125,6 +169,9 @@ router.put(
         data.images = req.files["images"].map(
           (f) => "/images/products/" + f.filename,
         );
+      }
+      if (!data.compareAtPrice) {
+        data.compareAtPrice = null;
       }
       data.featured = data.featured === "on";
       await Product.findByIdAndUpdate(req.params.id, data, {

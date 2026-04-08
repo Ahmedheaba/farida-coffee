@@ -19,6 +19,22 @@
       <a href="/admin/products/new" class="btn btn-primary">+ Add Product</a>
     </div>
 
+    <div style="background:white;padding:20px;border-radius:12px;margin-bottom:24px;border:1px solid var(--light-gray);display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:16px;">
+      <div>
+        <h3 style="margin-bottom:4px;font-size:1.1rem">Global Store Sale</h3>
+        <p style="color:var(--warm-gray);font-size:0.85rem;margin:0">Apply a flat percent discount across all products instantly.</p>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center;flex-wrap:wrap">
+        <form action="/admin/products/bulk-sale" method="POST" style="display:flex;gap:8px" onsubmit="return confirm('WARNING: This will override all active prices and apply a global percent discount. Proceed?')">
+          <input type="number" name="discountPercentage" min="1" max="99" required placeholder="% Off (e.g. 15)" style="width:140px;padding:8px 12px;border:1px solid var(--light-gray);border-radius:8px;font-family:inherit">
+          <button type="submit" class="btn btn-dark" style="padding:8px 16px">Apply Sale</button>
+        </form>
+        <form action="/admin/products/bulk-sale-reset" method="POST" onsubmit="return confirm('Restore all products to their original base prices?')">
+          <button type="submit" class="btn" style="padding:8px 16px;border:1.5px solid var(--danger);color:var(--danger);background:transparent">Reset All Sales</button>
+        </form>
+      </div>
+    </div>
+
     <table class="table">
       <thead>
         <tr>
